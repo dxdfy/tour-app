@@ -30,8 +30,13 @@ export default function Login() {
             },
             success: function (res) {
                 console.log('Login successful:', res);
-                // console.log(res.data.token)
-                wx.setStorageSync('token', res.data.token)
+                if(res.data.message === '登录成功'){
+                    console.log('登录成功',res.data.message);
+                    wx.setStorageSync('token', res.data.token);
+                    wx.redirectTo({
+                        url: '/pages/index/index'
+                    });
+                }
             },
             fail: function (error) {
                 console.error('Login failed:', error);
