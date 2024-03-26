@@ -1,9 +1,10 @@
 import { View, Textarea, Button, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
-import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader } from 'taro-ui'
+import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader, AtInput } from 'taro-ui'
 export default function PublishTravel() {
     const [textValue, setTextValue] = useState('');
+    const [titleValue, setTitleValue] = useState('');
     const [isOpenModal, setIsOpenModal] = useState(false);
     // const [scrollViewHeight, setScrollViewHeight] = useState(0);
     const [files, setFiles] = useState([
@@ -15,7 +16,9 @@ export default function PublishTravel() {
     const handleChange = (event) => {
         setTextValue(event.detail.value);
     };
-
+    const handleTitleChange =(value) => {
+        setTitleValue(value);
+    };
 
     const onChange = (newFiles) => {
         setFiles(newFiles);
@@ -66,6 +69,14 @@ export default function PublishTravel() {
         <ScrollView scrollY style={{ height: '100vh' }}>
             <View>
                 <AtCard title='输入内容'>
+                    <AtInput
+                        name='title'
+                        title='标题'
+                        type='text'
+                        value={titleValue}
+                        onChange={handleTitleChange}
+                        placeholder='请输入标题...'
+                    />
                     <Textarea
                         value={textValue}
                         onInput={handleChange}
