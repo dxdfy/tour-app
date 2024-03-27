@@ -42,26 +42,56 @@ export default function PublishTravel() {
     const handleConfirmUpload = () => {
         console.log(files);
         console.log(textValue);
+        console.log(titleValue);
         const storedToken = wx.getStorageSync('token'); // 使用 wx.getStorageSync 获取本地存储的 token
-        console.log(storedToken);
-        // 设置请求头中的 Authorization
-        wx.request({
-            url: 'http://127.0.0.1:3007/my/task/cates',
-            method: 'GET',
-            header: {
-                'Authorization': storedToken
-            },
-            success(response) {
-                console.log(response.data);
-                // 根据 query.name 进行筛选
-                let filteredData = response.data.data;
-                console.log(filteredData);
-
-            },
-            fail(error) {
-                console.error('Error:', error);
-            }
+        // console.log(storedToken);
+        const header = {
+            'Authorization': storedToken,
+            'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
+        };
+    
+        // 构造文件上传的 formData
+        const formData = {
+            username:wx.getStorageSync('username'),
+            textValue: textValue,
+            titleValue: titleValue
+        };
+    
+        // 上传文件
+        files.forEach((file, index) => {
+            wx.uploadFile({
+                url: 'http://192.168.137.1:3007/my/task/add',
+                filePath: file.url, // 文件的临时路径
+                name: `file`, // 后端需要的文件字段名
+                formData: formData, // 其他表单数据
+                header: header,
+                success(response) {
+                    console.log(response.data);
+                    // 处理响应数据
+                },
+                fail(error) {
+                    console.error('Error:', error);
+                }
+            });
         });
+        // wx.request({
+        //     url: 'http://192.168.137.1:3007/my/task/add',
+        //     method: 'POST',
+        //     data: formData,
+        //     header: {
+        //         'Authorization': storedToken
+        //     },
+        //     success(response) {
+        //         console.log(response.data);
+        //         // 根据 query.name 进行筛选
+        //         let filteredData = response.data.data;
+        //         console.log(filteredData);
+
+        //     },
+        //     fail(error) {
+        //         console.error('Error:', error);
+        //     }
+        // });
         setIsOpenModal(false); // 关闭 Modal
         // 在这里执行上传操作
     };

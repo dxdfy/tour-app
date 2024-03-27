@@ -22,7 +22,7 @@ export default function Login() {
         };
         console.log(data)
         wx.request({
-            url: 'http://192.168.1.103:3007/api/login',
+            url: 'http://192.168.137.1:3007/api/login',
             method: 'POST',
             data: data,
             header: {
@@ -33,6 +33,7 @@ export default function Login() {
                 if(res.data.message === '登录成功'){
                     console.log('登录成功',res.data.message);
                     wx.setStorageSync('token', res.data.token);
+                    wx.setStorageSync('username', username);
                     wx.redirectTo({
                         url: '/pages/index/index'
                     });
