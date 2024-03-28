@@ -60,7 +60,7 @@ export default function PublishTravel() {
         // 上传文件
         files.forEach((file, index) => {
             wx.uploadFile({
-                url: 'http://192.168.137.1:3007/my/task/add',
+                url: 'http://192.168.1.107:3007/my/task/add',
                 filePath: file.url, // 文件的临时路径
                 name: `file`, // 后端需要的文件字段名
                 formData: formData, // 其他表单数据
