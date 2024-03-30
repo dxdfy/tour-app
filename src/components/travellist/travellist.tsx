@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react'
 import TravelCard from './travelcard';
 import './travellist.scss'
 import Taro, { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
+import { AtSearchBar } from 'taro-ui'
 import Paging from './paging';
+
 // const list = [{
 //     id: 1,
 //     name: 'xianxian',
@@ -27,6 +29,7 @@ export default function TravelList() {
         pic_urls: ["http://127.0.0.1:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://127.0.0.1:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"],
         avatar: 'http://127.0.0.1:3007/public/upload/1711703879138-EnLxfaT9WMMl744c2ca944b4001d1a05ba4184354df1.jpeg'
     }])
+    const [searchlist, setSearchList] = useState([])
     const [loading, setLoading] = useState(false);
     const [paging, setPaging] = useState(new Paging({
         url: 'http://127.0.0.1:3007/my/task/passcates'
@@ -34,8 +37,7 @@ export default function TravelList() {
     // const paging = new Paging({
     //     url: 'http://127.0.0.1:3007/my/task/passcates'
     // })
-    const [leftHeight, setLeftHeight] = useState(0);
-    const [rightHeight, setRightHeight] = useState(0);
+    const [searchvalue, setSearchValue] = useState('')
     async function fetchData() {
         // 在组件加载时发起请求
         const data = await paging.getMoreData();
@@ -43,11 +45,14 @@ export default function TravelList() {
         console.log(data);
         if (data) {
             setList(data);
+            setSearchList(data);
         }
+
     }
     useEffect(() => {
 
         fetchData();
+
         // const query = Taro.createSelectorQuery();
         // query.select('.content-left').boundingClientRect(rect => {
         //     setLeftHeight(rect[0].height);
@@ -92,11 +97,30 @@ export default function TravelList() {
             fetchData();
         }
     })
+    const changeSearchValue = (value) => {
+        setSearchValue(value)
+    }
+    const search = () => {
+        console.log('search')
+        console.log(searchvalue)
+        const newlist = []
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].name.includes(searchvalue) || list[i].title.includes(searchvalue)) {
+                newlist.push(list[i])
+            }
+        }
+        setSearchList(newlist)
+    }
     return (
         <View className='page' >
+            <AtSearchBar
+                value={searchvalue}
+                onChange={(value) => changeSearchValue(value)}
+                onActionClick={search}
+            />
             <View className='content'>
                 <View className='content-left'>
-                    {list.map((item, index) => {
+                    {searchlist.map((item, index) => {
                         if (index % 2 === 0) {
                             return <TravelCard key={index} {...item} />
                         }
@@ -104,7 +128,7 @@ export default function TravelList() {
                     })}
                 </View>
                 <View className='content-right'>
-                    {list.map((item, index) => {
+                    {searchlist.map((item, index) => {
                         if (index % 2 === 1) {
                             return <TravelCard key={index} {...item} />
                         }
