@@ -22,7 +22,7 @@ export default function Login() {
         };
         console.log(data)
         wx.request({
-            url: 'http://172.30.184.167:3007/api/login',
+            url: 'http://127.0.0.1:3007/api/login',
             method: 'POST',
             data: data,
             header: {

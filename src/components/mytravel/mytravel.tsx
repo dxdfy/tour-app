@@ -17,7 +17,7 @@ export default function MyTravel() {
         };
 
         wx.request({
-            url: 'http://172.30.184.167:3007/my/task/cates',
+            url: 'http://127.0.0.1:3007/my/task/cates',
             method: 'POST',
             data: data,
             header: {
@@ -80,7 +80,7 @@ export default function MyTravel() {
 
         try {
             const removeResponse = await wx.request({
-                url: 'http://172.30.184.167:3007/my/task/remove',
+                url: 'http://127.0.0.1:3007/my/task/remove',
                 method: 'POST',
                 data: data,
                 header: {
@@ -114,7 +114,7 @@ export default function MyTravel() {
         const uploadFilePromises = files.map((file, index) => {
             return new Promise((resolve, reject) => {
                 wx.uploadFile({
-                    url: 'http://172.30.184.167:3007/my/task/add',
+                    url: 'http://127.0.0.1:3007/my/task/add',
                     filePath: file.url,
                     name: `file`,
                     formData: formData,
@@ -148,7 +148,7 @@ export default function MyTravel() {
         };
 
         await wx.request({
-            url: 'http://172.30.184.167:3007/my/task/remove',
+            url: 'http://127.0.0.1:3007/my/task/remove',
             method: 'POST',
             data: data,
             header: {
@@ -182,7 +182,7 @@ export default function MyTravel() {
         // 上传文件
         files.forEach((file, index) => {
             wx.uploadFile({
-                url: 'http://172.30.184.167:3007/my/task/add',
+                url: 'http://127.0.0.1:3007/my/task/add',
                 filePath: file.url, // 文件的临时路径
                 name: `file`, // 后端需要的文件字段名
                 formData: formData, // 其他表单数据

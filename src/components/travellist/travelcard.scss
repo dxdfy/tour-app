@@ -1,0 +1,48 @@
+.content-item {
+    margin: 10rpx auto 20rpx;
+    background: #fff;
+    width: 98%;
+    border-radius: 20rpx;
+    overflow: hidden;
+}
+
+.content-item-img {
+    width: 100%;
+}
+
+.content-item-box {
+    font-size: 24rpx;
+    color: #333;
+    padding: 20rpx;
+    box-sizing: border-box;
+}
+
+.content-item-title {
+    /* 一行省略 */
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
+.content-item-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20rpx;
+    font-size: 22rpx;
+}
+
+.content-item-avatar {
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 50%;
+    margin-right: 15rpx;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
