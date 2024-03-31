@@ -5,6 +5,7 @@ import './travellist.scss'
 import Taro, { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import { AtSearchBar } from 'taro-ui'
 import Paging from './paging';
+import baseUrl from '../baseUrl';
 
 // const list = [{
 //     id: 1,
@@ -32,7 +33,7 @@ export default function TravelList() {
     const [searchlist, setSearchList] = useState([])
     const [loading, setLoading] = useState(false);
     const [paging, setPaging] = useState(new Paging({
-        url: 'http://127.0.0.1:3007/my/task/passcates'
+        url: `${baseUrl.baseUrl}my/task/passcates`
     }))
     // const paging = new Paging({
     //     url: 'http://127.0.0.1:3007/my/task/passcates'

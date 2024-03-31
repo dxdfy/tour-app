@@ -3,7 +3,6 @@ import Taro from '@tarojs/taro'
 import React, { useState, Component } from 'react'
 import { AtButton } from 'taro-ui'
 import { AtInput, AtForm } from 'taro-ui'
-
 import './login.scss'
 
 export default function Login() {
@@ -22,7 +21,7 @@ export default function Login() {
         };
         console.log(data)
         wx.request({
-            url: 'http://192.168.1.102:3007/api/login',
+            url: 'http://192.168.1.104:3007/api/login',
             method: 'POST',
             data: data,
             header: {
