@@ -3,7 +3,7 @@ import Taro, { clearStorageSync } from '@tarojs/taro';
 import React, { useState, useEffect } from 'react'
 import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader, AtInput, AtAvatar, AtButton, AtTag } from 'taro-ui'
 import baseUrl from '../baseUrl';
-
+import './mytravel.scss'
 export default function MyTravel() {
     const [travelData, setTravelData] = useState([]);
     const [textValue, setTextValue] = useState('');
@@ -73,19 +73,26 @@ export default function MyTravel() {
         setFiles(newFiles);
     };
     const handleChooseVideo = async () => {
-        const res = await Taro.chooseVideo({
-            sourceType: ['album', 'camera'],
-            compressed: true,
-            maxDuration: 60,
-            camera: 'back',
-            success: (res) => {
-                setVideoFile(res.tempFilePath);
-                console.log('选择视频');
-            },
-            fail: (err) => {
-                console.error('选择视频失败', err);
-            },
-        });
+        Taro.showLoading({ title: '加载中...', mask: true }); // 显示加载状态
+        try {
+            const res = await Taro.chooseVideo({
+                sourceType: ['album', 'camera'],
+                compressed: true,
+                maxDuration: 60,
+                camera: 'back',
+                success: (res) => {
+                    setVideoFile(res.tempFilePath);
+                    console.log('选择视频');
+                },
+                fail: (err) => {
+                    console.error('选择视频失败', err);
+                },
+            });
+        } catch (error) {
+            console.error('选择视频失败', error);
+        } finally {
+            Taro.hideLoading(); // 隐藏加载状态
+        }
     };
 
 
@@ -100,44 +107,54 @@ export default function MyTravel() {
             });
             return; // 中止函数执行
         }
+    
         const storedToken = wx.getStorageSync('token');
         const removeFiles = oldFiles.filter(oldfile => !files.some(File => File.url === oldfile.url));
         console.log('remove files:', removeFiles);
+    
+        // 存储上传操作的 Promise
+        const uploadPromises = [];
+    
         if (removeFiles.length !== 0) {
             const files_url = removeFiles.map(file => file.url);
             const data = {
                 id: currentId,
                 files: files_url,
             };
-            await wx.request({
-                url: `${baseUrl.baseUrl}my/task/remove`,
-                method: 'POST',
-                data: data,
-                header: {
-                    'Authorization': storedToken,
-                    'content-type': 'application/x-www-form-urlencoded'
-                },
-                success: function (res) {
-                    if (res.data.message === '删除游记图片成功') {
-                        console.log('删除成功');
-                        setQuery({});
+            const removePromise = new Promise((resolve, reject) => {
+                wx.request({
+                    url: `${baseUrl.baseUrl}my/task/remove`,
+                    method: 'POST',
+                    data: data,
+                    header: {
+                        'Authorization': storedToken,
+                        'content-type': 'application/x-www-form-urlencoded'
+                    },
+                    success: function (res) {
+                        if (res.data.message === '删除游记图片成功') {
+                            console.log('删除成功');
+                            setQuery({});
+                            resolve();
+                        }
+                    },
+                    fail: function (error) {
+                        console.error('failed:', error);
+                        reject(error);
                     }
-                },
-                fail: function (error) {
-                    console.error('failed:', error);
-                    return;
-                }
+                });
             });
-
+            uploadPromises.push(removePromise);
         }
+    
         const newFiles = files.filter(file => !oldFiles.some(oldFile => oldFile.url === file.url));
-        console.log('添加的图片', newFiles)
+        console.log('添加的图片', newFiles);
+    
         if (newFiles.length !== 0) {
             const header = {
                 'Authorization': storedToken,
                 'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
             };
-
+    
             // 构造文件上传的 formData
             const formData = {
                 username: wx.getStorageSync('username'),
@@ -146,62 +163,43 @@ export default function MyTravel() {
                 is_add: 'false',
                 id: currentId,
             };
-
-            // 上传文件
+    
+            // 循环上传文件
             newFiles.forEach((file, index) => {
-                wx.compressImage({
-                    src: file.url,
-                    quality: 80,
-                    success: (res) => {
-                        const compressedFilePath = res.tempFilePath;
-                        wx.uploadFile({
-                            url: `${baseUrl.baseUrl}my/task/add`,
-                            filePath: compressedFilePath, // 文件的临时路径
-                            name: `file`, // 后端需要的文件字段名
-                            formData: formData, // 其他表单数据
-                            header: header,
-                            success(response) {
-                                console.log(response.data);
-                                setQuery({});
-                            },
-                            fail(error) {
-                                console.error('Error:', error);
-                            }
-                        });
-                    },
-                    fail: (error) => {
-                        console.error('Error:', error);
-                    }
+                const uploadFilePromise = new Promise((resolve, reject) => {
+                    wx.compressImage({
+                        src: file.url,
+                        quality: 80,
+                        success: (res) => {
+                            const compressedFilePath = res.tempFilePath;
+                            wx.uploadFile({
+                                url: `${baseUrl.baseUrl}my/task/add`,
+                                filePath: compressedFilePath, // 文件的临时路径
+                                name: `file`, // 后端需要的文件字段名
+                                formData: formData, // 其他表单数据
+                                header: header,
+                                success(response) {
+                                    console.log(response.data);
+                                    setQuery({});
+                                    resolve();
+                                },
+                                fail(error) {
+                                    console.error('Error:', error);
+                                    reject(error);
+                                }
+                            });
+                        },
+                        fail: (error) => {
+                            console.error('Error:', error);
+                            reject(error);
+                        }
+                    });
                 });
-            });
-
-        }
-        if (newFiles.length === 0 && removeFiles.length === 0) {
-            const data = {
-                id: currentId,
-                text: textValue,
-                title: titleValue
-            };
-            wx.request({
-                url: `${baseUrl.baseUrl}my/task/update_txt`,
-                method: 'POST',
-                data: data,
-                header: {
-                    'Authorization': storedToken,
-                    'content-type': 'application/x-www-form-urlencoded'
-                },
-                success: function (res) {
-                    if (res.data.message === '更新游记文本信息成功') {
-                        console.log('更新文本信息成功');
-                        setQuery({});
-                    }
-                },
-                fail: function (error) {
-                    console.error('failed:', error);
-                    return;
-                }
+                uploadPromises.push(uploadFilePromise);
             });
         }
+    
+        // 检查视频上传
         if (!videoFile) {
             console.log('未选择视频');
         } else {
@@ -215,26 +213,45 @@ export default function MyTravel() {
             };
             const videopath = videoFile;
             console.log('video', videoFile);
-            wx.uploadFile({
-                url: `${baseUrl.baseUrl}my/task/video`,
-                filePath: videopath, // 文件的临时路径
-                name: `file`, // 后端需要的文件字段名
-                formData: formData, // 其他表单数据
-                header: header,
-                success(response) {
-                    console.log(response.data);
-                    setVideoFile('');
-                },
-                fail(error) {
-                    console.error('Error:', error);
-                }
+            const uploadVideoPromise = new Promise((resolve, reject) => {
+                wx.uploadFile({
+                    url: `${baseUrl.baseUrl}my/task/video`,
+                    filePath: videopath, // 文件的临时路径
+                    name: `file`, // 后端需要的文件字段名
+                    formData: formData, // 其他表单数据
+                    header: header,
+                    success(response) {
+                        console.log(response.data);
+                        setVideoFile('');
+                        resolve();
+                    },
+                    fail(error) {
+                        console.error('Error:', error);
+                        reject(error);
+                    }
+                });
             });
+            uploadPromises.push(uploadVideoPromise);
         }
-
-        setIsOpenModal(false); // 关闭 Modal
-        // console.log(storedToken);
-
+    
+        // 使用 Promise.all() 来检测所有上传操作是否成功
+        Promise.all(uploadPromises)
+            .then(() => {
+                Taro.showToast({
+                    title: '游记更新成功',
+                    icon: 'success',
+                    duration: 1000 
+                });
+                setIsOpenModal(false); // 关闭 Modal
+                console.log('所有上传成功！');
+            })
+            .catch((error) => {
+                // 如果有任何一个上传操作失败，可以在这里处理失败逻辑
+                console.error('上传失败:', error);
+                // 可以选择适当的方式提示用户上传失败
+            });
     };
+    
     const handleDelete = (id) => {
         const storedToken = wx.getStorageSync('token');
         const data = {
@@ -251,6 +268,11 @@ export default function MyTravel() {
             success: function (res) {
                 if (res.data.message === '删除成功') {
                     console.log('删除成功');
+                    Taro.showToast({
+                        title: '删除成功',
+                        icon: 'success',
+                        duration: 1000 // 可根据需要调整显示时间
+                    });
                     setQuery({});
                 }
             },
@@ -274,13 +296,20 @@ export default function MyTravel() {
                             <AtAvatar circle image={travel.pic_urls[0]} size='large'></AtAvatar>
                             {/* <img src={travel.pic_urls[0]} style={{ width: '100%', height: '200px' }} /> */}
                             <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <AtTag type='primary' circle>{travel.status}</AtTag>
-                                {/* <View>
-                                    <Video
-                                        src='http://192.168.137.1:3007/public/upload/1711778097508-KLsAvABtStvc025001d967bc36eac1a16c94cd538dbb.mp4' // 视频地址，需要替换成实际的视频地址
-                                        controls // 显示视频控制按钮
-                                    />
-                                </View> */}
+                                <View>
+                                    {travel.status === '已拒绝' && (
+                                        <AtTag type='primary' circle className='rejected-tag'>{travel.status}</AtTag>
+                                    )}
+                                    {travel.status === '待审核' && (
+                                        <AtTag type='primary' circle className='pending-tag'>{travel.status}</AtTag>
+                                    )}
+                                    {travel.status === '已通过' && (
+                                        <AtTag type='primary' circle className='approved-tag'>{travel.status}</AtTag>
+                                    )}
+                                    {travel.status === '已拒绝' && (
+                                        <View style={{ color: 'red' }}>拒绝原因: {travel.rejection_reason}</View>
+                                    )}
+                                </View>
                                 <View style={{ display: 'flex' }}>
                                     <AtButton type='primary' onClick={() => handleEdit(travel.id)}>编辑</AtButton>
                                     <AtButton type='primary' onClick={() => handleDelete(travel.id)}>删除</AtButton>

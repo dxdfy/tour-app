@@ -139,7 +139,11 @@ export default function PublishTravel() {
                     }
                 });
             }
-
+            Taro.showToast({
+                title: '上传成功',
+                icon: 'success',
+                duration: 1000 
+            });
             setIsOpenModal(false); // 关闭 Modal
         } catch (error) {
             console.error('Error:', error);
