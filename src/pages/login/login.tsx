@@ -30,8 +30,8 @@ export default function Login() {
             },
             success: function (res) {
                 console.log('Login successful:', res);
-                if(res.data.message === '登录成功'){
-                    console.log('登录成功',res.data.message);
+                if (res.data.message === '登录成功') {
+                    console.log('登录成功', res.data.message);
                     wx.setStorageSync('token', res.data.token);
                     wx.setStorageSync('username', username);
                     wx.redirectTo({
