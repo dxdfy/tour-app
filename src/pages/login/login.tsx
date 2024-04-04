@@ -3,7 +3,6 @@ import Taro from '@tarojs/taro'
 import React, { useState, Component } from 'react'
 import { AtButton } from 'taro-ui'
 import { AtInput, AtForm } from 'taro-ui'
-
 import './login.scss'
 
 export default function Login() {

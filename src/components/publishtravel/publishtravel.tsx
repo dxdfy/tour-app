@@ -2,6 +2,7 @@ import { View, Textarea, Button, ScrollView, Input } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
 import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader, AtInput } from 'taro-ui'
+import baseUrl from '../baseUrl';
 export default function PublishTravel() {
     const [textValue, setTextValue] = useState('');
     const [titleValue, setTitleValue] = useState('');
@@ -43,33 +44,43 @@ export default function PublishTravel() {
         return new Promise<void>((resolve, reject) => {
             // 上传文件
             files.forEach((file, index) => {
-                wx.uploadFile({
-                    url: 'http://127.0.0.1:3007/my/task/add',
-                    filePath: file.url, // 文件的临时路径
-                    name: `file`, // 后端需要的文件字段名
-                    formData: formData, // 其他表单数据
-                    header: header,
-                    success(response) {
-                        const responseData = JSON.parse(response.data);
-                        console.log(responseData.message);
-                        if (responseData.message === '新增游记成功') {
-                            resolve(); // 文件上传成功且消息为 "新增游记成功"，resolve Promise
-                        }
-                        else if (responseData.message === '已有该标题的游记,请前往我的游记进行编辑') {
-                            Taro.showToast({
-                                title: '已有该标题的游记,请前往我的游记进行编辑',
-                                icon: 'none',
-                                duration: 1000
-                            });
-                            setIsOpenModal(false);
-                        }
-                        else {
-                            reject(new Error('新增游记失败')); // 消息不是 "新增游记成功"，reject Promise
-                        }
+                wx.compressImage({
+                    src: file.url,
+                    quality: 80,
+                    success: (res) => {
+                        const compressedFilePath = res.tempFilePath;
+                        wx.uploadFile({
+                            url: `${baseUrl.baseUrl}my/task/add`,
+                            filePath: compressedFilePath, // 文件的临时路径
+                            name: `file`, // 后端需要的文件字段名
+                            formData: formData, // 其他表单数据
+                            header: header,
+                            success(response) {
+                                const responseData = JSON.parse(response.data);
+                                console.log(responseData.message);
+                                if (responseData.message === '新增游记成功') {
+                                    resolve(); // 文件上传成功且消息为 "新增游记成功"，resolve Promise
+                                }
+                                else if (responseData.message === '已有该标题的游记,请前往我的游记进行编辑') {
+                                    Taro.showToast({
+                                        title: '已有该标题的游记,请前往我的游记进行编辑',
+                                        icon: 'none',
+                                        duration: 1000
+                                    });
+                                    setIsOpenModal(false);
+                                }
+                                else {
+                                    reject(new Error('新增游记失败')); // 消息不是 "新增游记成功"，reject Promise
+                                }
+                            },
+                            fail(error) {
+                                console.error('Error:', error);
+                                reject(error); // 文件上传失败后，reject Promise
+                            }
+                        });
                     },
-                    fail(error) {
+                    fail: (error) => {
                         console.error('Error:', error);
-                        reject(error); // 文件上传失败后，reject Promise
                     }
                 });
             });
@@ -115,7 +126,7 @@ export default function PublishTravel() {
                 const videopath = videoFile;
                 console.log('video', videoFile);
                 wx.uploadFile({
-                    url: 'http://127.0.0.1:3007/my/task/video',
+                    url: `${baseUrl.baseUrl}my/task/video`,
                     filePath: videopath, // 文件的临时路径
                     name: `file`, // 后端需要的文件字段名
                     formData: formData, // 其他表单数据
@@ -128,7 +139,11 @@ export default function PublishTravel() {
                     }
                 });
             }
-
+            Taro.showToast({
+                title: '上传成功',
+                icon: 'success',
+                duration: 1000
+            });
             setIsOpenModal(false); // 关闭 Modal
         } catch (error) {
             console.error('Error:', error);
