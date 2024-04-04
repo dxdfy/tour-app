@@ -33,7 +33,7 @@ export default function Register() {
 
                 // 上传保存的图片
                 wx.uploadFile({
-                    url: 'http://127.0.0.1:3007/api/register',
+                    url: 'http://192.168.1.108:3007/api/register',
                     filePath: savedFilePath,
                     name: 'file',
                     formData: {

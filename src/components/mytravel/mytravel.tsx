@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader, AtInput, AtAvatar, AtButton, AtTag } from 'taro-ui'
 import baseUrl from '../baseUrl';
 import './mytravel.scss'
-export default function MyTravel() {
+export default function MyTravel({ setCurrent }) {
     const [travelData, setTravelData] = useState([]);
     const [textValue, setTextValue] = useState('');
     const [titleValue, setTitleValue] = useState('');
@@ -13,6 +13,7 @@ export default function MyTravel() {
     const [files, setFiles] = useState([]);
     const [query, setQuery] = useState({});
     const [currentId, setCurrentId] = useState(0);
+    const [oldVideoFile, setOldVideoFile] = useState('');
     const [videoFile, setVideoFile] = useState('');
     useEffect(() => {
         const storedToken = wx.getStorageSync('token');
@@ -45,11 +46,18 @@ export default function MyTravel() {
         // 根据id找到对应的游记数据
         const selectedTravel = travelData.find(travel => travel.id === id);
         const filesData = selectedTravel.pic_urls.map(url => ({ url, file: { url } }));
-        console.log(filesData);
+        console.log(selectedTravel);
         setFiles(filesData);
         setOldFiles(filesData);
         setTitleValue(selectedTravel.title);
         setTextValue(selectedTravel.text);
+        if(selectedTravel.video_urls !== null && selectedTravel.video_urls.length !== 0   ){
+            setVideoFile(selectedTravel.video_urls[0]);
+            setOldVideoFile(selectedTravel.video_urls[0]);
+        }else{
+            setVideoFile('');
+            setOldVideoFile('');
+        }
         setCurrentId(id);
         setIsOpenModal(true); // 打开模态框
     };
@@ -61,6 +69,7 @@ export default function MyTravel() {
         setFiles([]);
         setOldFiles([]);
         setVideoFile('');
+        setOldVideoFile('');
     };
     const handleTitleChange = (value) => {
         setTitleValue(value);
@@ -133,7 +142,6 @@ export default function MyTravel() {
                     success: function (res) {
                         if (res.data.message === '删除游记图片成功') {
                             console.log('删除成功');
-                            setQuery({});
                             resolve();
                         }
                     },
@@ -155,7 +163,6 @@ export default function MyTravel() {
                 'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
             };
 
-            // 构造文件上传的 formData
             const formData = {
                 username: wx.getStorageSync('username'),
                 textValue: textValue,
@@ -180,7 +187,6 @@ export default function MyTravel() {
                                 header: header,
                                 success(response) {
                                     console.log(response.data);
-                                    setQuery({});
                                     resolve();
                                 },
                                 fail(error) {
@@ -200,38 +206,73 @@ export default function MyTravel() {
         }
 
         // 检查视频上传
-        if (!videoFile) {
+        if (videoFile === oldVideoFile) {
             console.log('未选择视频');
         } else {
-            const header = {
-                'Authorization': storedToken,
-                'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
-            };
-            const formData = {
-                username: wx.getStorageSync('username'),
-                titleValue: titleValue,
-            };
-            const videopath = videoFile;
-            console.log('video', videoFile);
-            const uploadVideoPromise = new Promise((resolve, reject) => {
-                wx.uploadFile({
-                    url: `${baseUrl.baseUrl}my/task/video`,
-                    filePath: videopath, // 文件的临时路径
-                    name: `file`, // 后端需要的文件字段名
-                    formData: formData, // 其他表单数据
-                    header: header,
-                    success(response) {
-                        console.log(response.data);
-                        setVideoFile('');
-                        resolve();
-                    },
-                    fail(error) {
-                        console.error('Error:', error);
-                        reject(error);
-                    }
+            if (!videoFile && oldVideoFile) {
+                console.log('删除视频');
+                const deleteVideoPromise = new Promise((resolve, reject) => {
+                    const data = {
+                        id: currentId,
+                    };
+                    wx.request({
+                        url: `${baseUrl.baseUrl}my/task/deleteVideo`,
+                        method: 'POST',
+                        data: data,
+                        header: {
+                            'Authorization': storedToken,
+                            'content-type': 'application/x-www-form-urlencoded',
+                        },
+                        success(res) {
+                            if (res.data.message === '删除视频成功') {
+                                console.log('删除视频成功');
+                            }else{
+                                console.log('删除视频失败');
+                            }
+                            setVideoFile('');
+                            setOldVideoFile('');
+                            resolve();
+                        },
+                        fail(error) {
+                            console.error('视频删除失败:', error);
+                            reject(error);
+                        }
+                    });
                 });
-            });
-            uploadPromises.push(uploadVideoPromise);
+                uploadPromises.push(deleteVideoPromise);
+            }else{
+                const header = {
+                    'Authorization': storedToken,
+                    'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
+                };
+                const formData = {
+                    username: wx.getStorageSync('username'),
+                    titleValue: titleValue,
+                };
+                const videopath = videoFile;
+                console.log('video', videoFile);
+                console.log('oldvideo', oldVideoFile);
+                const uploadVideoPromise = new Promise((resolve, reject) => {
+                    wx.uploadFile({
+                        url: `${baseUrl.baseUrl}my/task/video`,
+                        filePath: videopath, // 文件的临时路径
+                        name: `file`, // 后端需要的文件字段名
+                        formData: formData, // 其他表单数据
+                        header: header,
+                        success(response) {
+                            console.log(response.data);
+                            setVideoFile('');
+                            setOldVideoFile('');
+                            resolve();
+                        },
+                        fail(error) {
+                            console.error('Error:', error);
+                            reject(error);
+                        }
+                    });
+                });
+                uploadPromises.push(uploadVideoPromise);
+            }
         }
 
         // 使用 Promise.all() 来检测所有上传操作是否成功
@@ -242,6 +283,7 @@ export default function MyTravel() {
                     icon: 'success',
                     duration: 1000
                 });
+                setQuery({});
                 setIsOpenModal(false); // 关闭 Modal
                 console.log('所有上传成功！');
             })
@@ -282,18 +324,30 @@ export default function MyTravel() {
             }
         });
     }
-
+    const handleTextButtonClick = () => {
+        setCurrent(1);
+    };
+    const handleCancelVideo = () => {
+        setVideoFile(''); 
+    };
     return (
-        <ScrollView scrollY style={{ height: 'calc(100vh - 100px)' }}>
+        <ScrollView scrollY style={{ height: 'calc(100vh - 50px)' }}>
             <View>
                 {/* 遍历显示用户游记 */}
+                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
+                    <Text style={{ fontSize: '15px' }}>我的</Text>
+                    <View style={{ position: 'absolute', right: '20px' }}>
+                        <Text style={{ fontSize: '16px', color: 'blue' }} onClick={handleTextButtonClick}>+新增</Text>
+                    </View>
+                </View>
                 {travelData.map((travel, index) => (
                     <AtCard
                         title={travel.title}
+                        renderIcon={<AtAvatar circle image={travel.pic_urls[0]} size='large'></AtAvatar>}
                         key={index} // 把 key 移到 AtCard 上
                     >
                         <View >
-                            <AtAvatar circle image={travel.pic_urls[0]} size='large'></AtAvatar>
+
                             {/* <img src={travel.pic_urls[0]} style={{ width: '100%', height: '200px' }} /> */}
                             <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <View>
@@ -349,14 +403,21 @@ export default function MyTravel() {
                                         onChange={onChange}
                                     />
                                 </AtCard>
-                                <AtCard title='选择视频' note='会覆盖旧视频'>
+                                <AtCard title='选择视频' note='旧视频会被覆盖'>
                                     <View>
                                         <AtButton onClick={handleChooseVideo}>选择视频</AtButton>
+                                        {videoFile ? <AtButton onClick={handleCancelVideo}>取消选择</AtButton> : null}
+                                        <AtTag
+                                            customStyle={{ backgroundColor: videoFile ? '#13CE66' : '#1890ff', color: '#fff' }}
+                                            circle
+                                        >
+                                            {videoFile ? '已有视频' : '无视频'}
+                                        </AtTag>
                                     </View>
                                 </AtCard>
                                 <View style={{ padding: '20px', textAlign: 'center' }}>
-                                    <Button onClick={handleUpload}>上传</Button>
-                                    <Button onClick={handleCancelModal}>取消</Button>
+                                    <AtButton onClick={handleUpload}>上传</AtButton>
+                                    <AtButton onClick={handleCancelModal}>取消</AtButton>
                                 </View>
                             </View>
                         </ScrollView>

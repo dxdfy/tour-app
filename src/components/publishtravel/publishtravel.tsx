@@ -1,9 +1,9 @@
 import { View, Textarea, Button, ScrollView, Input } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
-import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader, AtInput } from 'taro-ui'
+import { AtImagePicker, AtCard, AtModal, AtModalAction, AtModalContent, AtModalHeader, AtInput , AtTag, AtButton } from 'taro-ui'
 import baseUrl from '../baseUrl';
-export default function PublishTravel() {
+export default function PublishTravel({ setCurrent }) {
     const [textValue, setTextValue] = useState('');
     const [titleValue, setTitleValue] = useState('');
     const [isOpenModal, setIsOpenModal] = useState(false);
@@ -121,7 +121,13 @@ export default function PublishTravel() {
             // 文件上传完成后，执行视频上传操作
             if (!videoFile) {
                 console.log('未选择视频');
+                Taro.showToast({
+                    title: '上传成功',
+                    icon: 'success',
+                    duration: 1000 
+                });
                 setIsOpenModal(false);
+                setCurrent(2);
             } else {
                 const videopath = videoFile;
                 console.log('video', videoFile);
@@ -145,30 +151,45 @@ export default function PublishTravel() {
                 duration: 1000
             });
             setIsOpenModal(false); // 关闭 Modal
+            setCurrent(2);
         } catch (error) {
             console.error('Error:', error);
             // 处理上传失败的情况
         }
     };
-
-
+    
     const handleChooseVideo = async () => {
-        const res = await Taro.chooseVideo({
-            sourceType: ['album', 'camera'],
-            compressed: true,
-            maxDuration: 60,
-            camera: 'back',
-            success: (res) => {
-                setVideoFile(res.tempFilePath);
-            },
-            fail: (err) => {
-                console.error('选择视频失败', err);
-            },
-        });
+        Taro.showLoading({ title: '加载中...', mask: true }); // 显示加载状态
+        try {
+            const res = await Taro.chooseVideo({
+                sourceType: ['album', 'camera'],
+                compressed: true,
+                maxDuration: 60,
+                camera: 'back',
+                success: (res) => {
+                    setVideoFile(res.tempFilePath);
+                    console.log('选择视频');
+                },
+                fail: (err) => {
+                    console.error('选择视频失败', err);
+                },
+            });
+        } catch (error) {
+            console.error('选择视频失败', error);
+        } finally {
+            Taro.hideLoading(); // 隐藏加载状态
+        }
     };
+    const handleCancelVideo = () => {
+        setVideoFile(''); 
+    };
+    
 
     return (
-        <ScrollView scrollY style={{ height: 'calc(100vh - 100px)' }}>
+        <ScrollView scrollY style={{
+            height: 'calc(100vh - 50px)',
+            backgroundColor: '#f0f0f0',
+        }}>
             <View>
                 <AtCard title='输入内容'>
                     <AtInput
@@ -196,13 +217,22 @@ export default function PublishTravel() {
                         onImageClick={onImageClick}
                     />
                 </AtCard>
-                <AtCard title='选择视频'>
+                <AtCard title='选择视频(可选项)'>
                     <View>
-                        <Button onClick={handleChooseVideo}>选择视频</Button>
+                        <AtButton onClick={handleChooseVideo}>选择视频</AtButton>
+                        <View style={{ textAlign: 'center' }}>
+                        {videoFile ? <AtButton onClick={handleCancelVideo}>取消选择</AtButton> : null}
+                            <AtTag
+                                customStyle={{ backgroundColor: videoFile ? '#13CE66' : '#1890ff', color: '#fff' }}
+                                circle
+                            >
+                                {videoFile ? '已选择' : '未选择'}
+                            </AtTag>
+                        </View>
                     </View>
                 </AtCard>
                 <View style={{ padding: '20px', textAlign: 'center' }}>
-                    <Button onClick={handleUpload}>上传</Button>
+                    <AtButton onClick={handleUpload}>上传</AtButton>
                 </View>
                 <AtModal isOpened={isOpenModal} closeOnClickOverlay={false}>
                     <AtModalHeader>确认上传</AtModalHeader>
@@ -210,8 +240,8 @@ export default function PublishTravel() {
                         是否确认上传内容？
                     </AtModalContent>
                     <AtModalAction>
-                        <Button onClick={handleCancelUpload}>取消</Button>
-                        <Button onClick={handleConfirmUpload}>确认</Button>
+                        <AtButton onClick={handleCancelUpload}>取消</AtButton>
+                        <AtButton onClick={handleConfirmUpload}>确认</AtButton>
                     </AtModalAction>
                 </AtModal>
             </View>
