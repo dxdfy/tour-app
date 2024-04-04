@@ -1,0 +1,28 @@
+.avatar-button {
+
+    width: 350rpx;
+    height: 350rpx;
+    border-radius: 50%;
+
+}
+
+.avatar-image {
+    position: relative;
+    left: -31px;
+    width: 350rpx;
+    height: 350rpx;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.avatar-text {
+    position: relative;
+    top: 30%;
+    color: gray;
+}
+
+.username {
+    position: flex;
+    flex-direction: row;
+    align-items: center;
+}

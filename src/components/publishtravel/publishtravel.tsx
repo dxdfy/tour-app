@@ -148,7 +148,7 @@ export default function PublishTravel({ setCurrent }) {
             Taro.showToast({
                 title: '上传成功',
                 icon: 'success',
-                duration: 1000 
+                duration: 1000
             });
             setIsOpenModal(false); // 关闭 Modal
             setCurrent(2);
@@ -238,7 +238,7 @@ export default function PublishTravel({ setCurrent }) {
                     <AtModalHeader>确认上传</AtModalHeader>
                     <AtModalContent>
                         是否确认上传内容？
-                </AtModalContent>
+                    </AtModalContent>
                     <AtModalAction>
                         <AtButton onClick={handleCancelUpload}>取消</AtButton>
                         <AtButton onClick={handleConfirmUpload}>确认</AtButton>

@@ -1,4 +1,4 @@
-import { View, Text, Input } from '@tarojs/components'
+import { View, Text, Input, Form } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import React, { useState, Component } from 'react'
 import { AtButton } from 'taro-ui'
@@ -45,25 +45,39 @@ export default function Login() {
     }
     return (
         <View className='login'>
-            <Input type='number' placeholder='原生刺激' />
-            <AtInput
-                name='username'
-                title='用户名'
-                type='text'
-                placeholder='请输入用户名'
-                value={username}
-                onChange={value => handleUsernameInput(value)}
-            />
-            <AtInput
-                name='password'
-                title='密码'
-                type='password'
-                placeholder='请输入密码'
-                value={password}
-                onChange={value => handlePasswordInput(value)}
-            />
-            <AtButton type='primary' size='normal' onClick={handleLogin}>登录</AtButton>
-            <Text className='register-link' onClick={() => Taro.navigateTo({ url: '/pages/register/register' })}>点击注册</Text>
+            {/* <Form>
+                <Input title='aaa' type='number' placeholder='原生刺激' />
+            </Form> */}
+
+            <View>
+                {/* <Input type='number' placeholder='原生刺激' /> */}
+                <AtInput
+                    name='username'
+                    title='用户名'
+                    type='text'
+                    placeholder='请输入用户名'
+                    value={username}
+                    onChange={value => handleUsernameInput(value)}
+                />
+                <AtInput
+                    name='password'
+                    title='密码'
+                    type='password'
+                    placeholder='请输入密码'
+                    value={password}
+                    onChange={value => handlePasswordInput(value)}
+                />
+
+
+            </View>
+
+            <View>
+                <AtButton type='primary' size='normal' onClick={handleLogin}>登录</AtButton>
+            </View>
+            <View className='register-link'>
+                <Text onClick={() => Taro.navigateTo({ url: '/pages/register/register' })}>没有账号？点击注册</Text>
+            </View>
+
         </View>
     )
 }

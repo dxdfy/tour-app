@@ -12,7 +12,7 @@ import './index.scss'
 
 export default function Index() {
     const [current, setCurrent] = useState(0); // 使用 useState 定义当前选中的标签页索引
-    
+
     const handleClick = (index) => {
         setCurrent(index); // 更新当前选中的标签页索引
     };
@@ -43,10 +43,10 @@ export default function Index() {
             <AtTabBar
                 fixed
                 tabList={[
-                    { title: '游记列表', iconType: 'bullet-list'  },
+                    { title: '游记列表', iconType: 'bullet-list' },
                     { title: '游记发布', iconType: 'camera' },
                     { title: '我的游记', iconType: 'home' },
-                    { title: '我的',iconType: 'user' },
+                    { title: '我的', iconType: 'user' },
                 ]}
                 onClick={handleClick}
                 current={current}
