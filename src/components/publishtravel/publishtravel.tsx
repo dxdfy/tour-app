@@ -44,7 +44,7 @@ export default function PublishTravel() {
             // 上传文件
             files.forEach((file, index) => {
                 wx.uploadFile({
-                    url: 'http://192.168.1.102:3007/my/task/add',
+                    url: 'http://127.0.0.1:3007/my/task/add',
                     filePath: file.url, // 文件的临时路径
                     name: `file`, // 后端需要的文件字段名
                     formData: formData, // 其他表单数据
@@ -54,12 +54,12 @@ export default function PublishTravel() {
                         console.log(responseData.message);
                         if (responseData.message === '新增游记成功') {
                             resolve(); // 文件上传成功且消息为 "新增游记成功"，resolve Promise
-                        } 
-                        else if(responseData.message === '已有该标题的游记,请前往我的游记进行编辑'){
+                        }
+                        else if (responseData.message === '已有该标题的游记,请前往我的游记进行编辑') {
                             Taro.showToast({
                                 title: '已有该标题的游记,请前往我的游记进行编辑',
                                 icon: 'none',
-                                duration: 1000 
+                                duration: 1000
                             });
                             setIsOpenModal(false);
                         }
@@ -75,7 +75,7 @@ export default function PublishTravel() {
             });
         });
     };
-    const handleConfirmUpload = async() => {
+    const handleConfirmUpload = async () => {
         console.log(files);
         console.log(textValue);
         console.log(titleValue);
@@ -115,7 +115,7 @@ export default function PublishTravel() {
                 const videopath = videoFile;
                 console.log('video', videoFile);
                 wx.uploadFile({
-                    url: 'http://192.168.1.102:3007/my/task/video',
+                    url: 'http://127.0.0.1:3007/my/task/video',
                     filePath: videopath, // 文件的临时路径
                     name: `file`, // 后端需要的文件字段名
                     formData: formData, // 其他表单数据
@@ -135,7 +135,7 @@ export default function PublishTravel() {
             // 处理上传失败的情况
         }
     };
-    
+
 
     const handleChooseVideo = async () => {
         const res = await Taro.chooseVideo({
@@ -193,7 +193,7 @@ export default function PublishTravel() {
                     <AtModalHeader>确认上传</AtModalHeader>
                     <AtModalContent>
                         是否确认上传内容？
-                </AtModalContent>
+                    </AtModalContent>
                     <AtModalAction>
                         <Button onClick={handleCancelUpload}>取消</Button>
                         <Button onClick={handleConfirmUpload}>确认</Button>
