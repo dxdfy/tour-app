@@ -30,6 +30,8 @@ export default function TravelList() {
         pic_urls: ["http://127.0.0.1:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://127.0.0.1:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"],
         avatar: 'http://127.0.0.1:3007/public/upload/1711703879138-EnLxfaT9WMMl744c2ca944b4001d1a05ba4184354df1.jpeg'
     }])
+    const [leftlist, setLeftList] = useState([])
+    const [rightlist, setRightList] = useState([])
     const [searchlist, setSearchList] = useState([])
     const [loading, setLoading] = useState(false);
     const [paging, setPaging] = useState(new Paging({
@@ -42,28 +44,70 @@ export default function TravelList() {
     async function fetchData() {
         // 在组件加载时发起请求
         const data = await paging.getMoreData();
-        console.log(5);
-        console.log(data);
+        // console.log(5);
+        // console.log(data);
         if (data) {
             setList(data);
-            setSearchList(data);
+            const queryheightlist = [];
+            for (let i = 0; i < data.length; i++) {
+                queryheightlist.push(data[i].pic_urls[0]);
+            }
+            // console.log(queryheightlist)
+            const storedToken = wx.getStorageSync('token');
+            // 构建请求的数据对象
+            const requestData = {
+                data: JSON.stringify(queryheightlist.map(url => url.replace('http://127.0.0.1:3007/', '')))
+            };
+            // console.log(storedToken)
+            // console.log(requestData)
+            // 设置请求头部
+            const header = {
+                'Authorization': storedToken,
+                'content-type': 'application/x-www-form-urlencoded'
+            };
+
+            // 发送POST请求，并等待响应
+            const res = await Taro.request({
+                url: 'http://127.0.0.1:3007/my/task/gettaskheight',
+                method: 'POST',
+                data: requestData,
+                header: header
+            });
+            const heightlist = res.data;
+            // console.log(heightlist);
+            const leftdata = [];
+            const rightdata = [];
+            let lefttotalheight = 0;
+            let righttotalheight = 0;
+            for (let i = 0; i < data.length; i++) {
+                if (lefttotalheight > righttotalheight) {
+                    rightdata.push(data[i]);
+                    righttotalheight += heightlist[i];
+                }
+                else {
+                    leftdata.push(data[i]);
+                    lefttotalheight += heightlist[i];
+                }
+                // console.log(lefttotalheight)
+                // console.log(righttotalheight)
+            }
+            // setSearchList(data)
+            // console.log('data', data)
+            // console.log('leftdata', leftdata)
+            // console.log('rightdata', rightdata)
+            setLeftList(leftdata)
+            setRightList(rightdata)
         }
+        // if (data) {
+        //     setList(data);
+        //     setSearchList(data);
+        // }
 
     }
+
     useEffect(() => {
 
         fetchData();
-
-        // const query = Taro.createSelectorQuery();
-        // query.select('.content-left').boundingClientRect(rect => {
-        //     setLeftHeight(rect[0].height);
-        // }).exec();
-
-        // const query2 = Taro.createSelectorQuery();
-        // query2.select('.content-right').boundingClientRect(rect => {
-        //     setRightHeight(rect[0].height);
-        // }).exec();
-        // console.log()
     }, []); // 依赖为空数组表示只在组件加载时执行一次
 
     // onReachBottom: function () {
@@ -93,7 +137,7 @@ export default function TravelList() {
     //     })
     // }
     useReachBottom(() => {
-        console.log('到达页面底部')
+        // console.log('到达页面底部')
         if (paging.moreData === true) {
             fetchData();
         }
@@ -101,16 +145,66 @@ export default function TravelList() {
     const changeSearchValue = (value) => {
         setSearchValue(value)
     }
-    const search = () => {
-        console.log('search')
-        console.log(searchvalue)
-        const newlist = []
+    async function search() {
+        // console.log('search')
+        // console.log(searchvalue)
+        const data = []
         for (let i = 0; i < list.length; i++) {
             if (list[i].name.includes(searchvalue) || list[i].title.includes(searchvalue)) {
-                newlist.push(list[i])
+                data.push(list[i])
             }
         }
-        setSearchList(newlist)
+        const queryheightlist = [];
+        for (let i = 0; i < data.length; i++) {
+            queryheightlist.push(data[i].pic_urls[0]);
+        }
+        // console.log(queryheightlist)
+        const storedToken = wx.getStorageSync('token');
+        // 构建请求的数据对象
+        const requestData = {
+            data: JSON.stringify(queryheightlist.map(url => url.replace('http://127.0.0.1:3007/', '')))
+        };
+        // console.log(storedToken)
+        // console.log(requestData)
+        // 设置请求头部
+        const header = {
+            'Authorization': storedToken,
+            'content-type': 'application/x-www-form-urlencoded'
+        };
+
+        // 发送POST请求，并等待响应
+        const res = await Taro.request({
+            url: 'http://127.0.0.1:3007/my/task/gettaskheight',
+            method: 'POST',
+            data: requestData,
+            header: header
+        });
+        const heightlist = res.data;
+        // console.log(heightlist);
+        const leftdata = [];
+        const rightdata = [];
+        let lefttotalheight = 0;
+        let righttotalheight = 0;
+        for (let i = 0; i < data.length; i++) {
+            if (lefttotalheight > righttotalheight) {
+                rightdata.push(data[i]);
+                righttotalheight += heightlist[i];
+            }
+            else {
+                leftdata.push(data[i]);
+                lefttotalheight += heightlist[i];
+            }
+            // console.log(lefttotalheight)
+            // console.log(righttotalheight)
+        }
+        // setSearchList(data)
+        // console.log('data', data)
+        // console.log('leftdata', leftdata)
+        // console.log('rightdata', rightdata)
+        setLeftList(leftdata)
+        setRightList(rightdata)
+        // console.log(newlist)
+        // setSearchList(newlist)
     }
     return (
         <View className='page' >
@@ -121,19 +215,13 @@ export default function TravelList() {
             />
             <View className='content'>
                 <View className='content-left'>
-                    {searchlist.map((item, index) => {
-                        if (index % 2 === 0) {
-                            return <TravelCard key={index} {...item} />
-                        }
-                        return null
+                    {leftlist.map((item, index) => {
+                        return <TravelCard key={item.id} {...item} />
                     })}
                 </View>
                 <View className='content-right'>
-                    {searchlist.map((item, index) => {
-                        if (index % 2 === 1) {
-                            return <TravelCard key={index} {...item} />
-                        }
-                        return null
+                    {rightlist.map((item, index) => {
+                        return <TravelCard key={item.id} {...item} />
                     })}
                 </View>
             </View>

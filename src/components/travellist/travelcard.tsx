@@ -19,6 +19,11 @@ export default function TravelCard(props) {
         const queryParams = JSON.stringify(props);
         Taro.navigateTo({ url: `/pages/detail/detail?params=${queryParams}` });
     };
+    // const getheight = (e) => {
+    //     // let image = document.querySelector('.image');
+    //     console.log('width')
+    //     console.log(e.detail.width);
+    // };
     return (
         <View className='content-item' onClick={handleClick}>
             <Image src={pic_urls[0]} className='content-item-img' mode='widthFix' />

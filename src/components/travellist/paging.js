@@ -28,7 +28,7 @@ export default class Paging {
     async actualGetData() {
         const req = this.getCurrentReq();    //获取到具体的请求内容
         const storedToken = wx.getStorageSync('token');
-        console.log(req.url);
+        // console.log(req.url);
         try {
             const response = await Taro.request({
                 url: req.url, // 替换为你的接口地址
@@ -38,11 +38,11 @@ export default class Paging {
                 }
             });
 
-            console.log(response);
+            // console.log(response);
             if (response.data.status === 0) {
-                console.log(2);
+                // console.log(2);
                 let paging = response.data.data; //调用自定义工具中的请求方法，进行数据的获取
-                console.log(paging);
+                // console.log(paging);
 
                 if (!paging) {
                     console.log('未能获取数据');
@@ -56,7 +56,7 @@ export default class Paging {
                 if (this.moreData) {
                     this.page += 1;
                 }
-                console.log('现在的页码是', this.page)
+                // console.log('现在的页码是', this.page)
                 //因瀑布流显示数据需要累加展示，所以数据列表也需要累加
                 this.accumulator = this.accumulator.concat(paging);
             } else {
@@ -83,9 +83,9 @@ export default class Paging {
         await this.actualGetData();
         //4、释放锁
         this.locker = false;
-        console.log(3);
-        console.log(this.accumulator);
-        console.log(4);
+        // console.log(3);
+        // console.log(this.accumulator);
+        // console.log(4);
         return this.accumulator;
     }
 }
