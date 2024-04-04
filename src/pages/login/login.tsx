@@ -21,7 +21,7 @@ export default function Login() {
         };
         console.log(data)
         wx.request({
-            url: 'http://192.168.1.104:3007/api/login',
+            url: 'http://192.168.1.108:3007/api/login',
             method: 'POST',
             data: data,
             header: {
@@ -45,7 +45,7 @@ export default function Login() {
     }
     return (
         <View className='login'>
-            {/* <Input type='number' placeholder='原生刺激' /> */}
+            <Input type='number' placeholder='原生刺激' />
             <AtInput
                 name='username'
                 title='用户名'

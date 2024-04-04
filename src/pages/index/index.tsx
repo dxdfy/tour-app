@@ -22,10 +22,10 @@ export default function Index() {
             content = <TravelList />;
             break;
         case 1:
-            content = <PublishTravel />;
+            content = <PublishTravel setCurrent={setCurrent}/>;
             break;
         case 2:
-            content = <MyTravel />;
+            content = <MyTravel setCurrent={setCurrent}/>;
             break;
         case 3:
             content = <My />;
