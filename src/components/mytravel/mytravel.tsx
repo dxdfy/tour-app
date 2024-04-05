@@ -15,6 +15,7 @@ export default function MyTravel({ setCurrent }) {
     const [currentId, setCurrentId] = useState(0);
     const [oldVideoFile, setOldVideoFile] = useState('');
     const [videoFile, setVideoFile] = useState('');
+    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
     useEffect(() => {
         const storedToken = wx.getStorageSync('token');
         const data = {
@@ -293,13 +294,27 @@ export default function MyTravel({ setCurrent }) {
                 // 可以选择适当的方式提示用户上传失败
             });
     };
-
+    
     const handleDelete = (id) => {
+        setCurrentId(id);
+        setIsOpenDeleteModal(true);
+    }
+    const handleTextButtonClick = () => {
+        setCurrent(1);
+    };
+    const handleCancelVideo = () => {
+        setVideoFile(''); 
+    };
+    const handleCancelDelete = () => {
+        setCurrentId(0);
+        setIsOpenDeleteModal(false);
+    }
+    const handleConfirmDelete = async () => {
         const storedToken = wx.getStorageSync('token');
         const data = {
-            id: id,
+            id: currentId,
         };
-        wx.request({
+        await wx.request({
             url: `${baseUrl.baseUrl}my/task/delete`,
             method: 'POST',
             data: data,
@@ -323,13 +338,9 @@ export default function MyTravel({ setCurrent }) {
                 return;
             }
         });
+        setCurrentId(0);
+        setIsOpenDeleteModal(false);
     }
-    const handleTextButtonClick = () => {
-        setCurrent(1);
-    };
-    const handleCancelVideo = () => {
-        setVideoFile(''); 
-    };
     return (
         <ScrollView scrollY style={{ height: 'calc(100vh - 50px)' }}>
             <View>
@@ -422,6 +433,16 @@ export default function MyTravel({ setCurrent }) {
                             </View>
                         </ScrollView>
                     </AtModalContent>
+                </AtModal>
+                <AtModal isOpened={isOpenDeleteModal} closeOnClickOverlay={false}>
+                    <AtModalHeader>确认删除</AtModalHeader>
+                    <AtModalContent>
+                        是否确认删除该游记？
+                    </AtModalContent>
+                    <AtModalAction>
+                        <AtButton onClick={handleCancelDelete}>取消</AtButton>
+                        <AtButton onClick={handleConfirmDelete}>确认</AtButton>
+                    </AtModalAction>
                 </AtModal>
             </View>
         </ScrollView>
