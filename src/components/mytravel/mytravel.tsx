@@ -51,10 +51,10 @@ export default function MyTravel({ setCurrent }) {
         setOldFiles(filesData);
         setTitleValue(selectedTravel.title);
         setTextValue(selectedTravel.text);
-        if(selectedTravel.video_urls !== null && selectedTravel.video_urls.length !== 0   ){
+        if (selectedTravel.video_urls !== undefined && selectedTravel.video_urls.length !== 0) {
             setVideoFile(selectedTravel.video_urls[0]);
             setOldVideoFile(selectedTravel.video_urls[0]);
-        }else{
+        } else {
             setVideoFile('');
             setOldVideoFile('');
         }
@@ -226,7 +226,7 @@ export default function MyTravel({ setCurrent }) {
                         success(res) {
                             if (res.data.message === '删除视频成功') {
                                 console.log('删除视频成功');
-                            }else{
+                            } else {
                                 console.log('删除视频失败');
                             }
                             setVideoFile('');
@@ -240,7 +240,7 @@ export default function MyTravel({ setCurrent }) {
                     });
                 });
                 uploadPromises.push(deleteVideoPromise);
-            }else{
+            } else {
                 const header = {
                     'Authorization': storedToken,
                     'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
@@ -328,7 +328,7 @@ export default function MyTravel({ setCurrent }) {
         setCurrent(1);
     };
     const handleCancelVideo = () => {
-        setVideoFile(''); 
+        setVideoFile('');
     };
     return (
         <ScrollView scrollY style={{ height: 'calc(100vh - 50px)' }}>

@@ -15,8 +15,8 @@ import baseUrl from '../baseUrl';
 //     status: '已通过',
 //     is_delete: 0,
 //     rejection_reason: '',
-//     pic_urls: ["http://127.0.0.1:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://127.0.0.1:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"],
-//     avatar: 'http://127.0.0.1:3007/public/upload/1711703879138-EnLxfaT9WMMl744c2ca944b4001d1a05ba4184354df1.jpeg'
+//     pic_urls: ["http://192.168.1.105:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://192.168.1.105:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"],
+//     avatar: 'http://192.168.1.105:3007/public/upload/1711703879138-EnLxfaT9WMMl744c2ca944b4001d1a05ba4184354df1.jpeg'
 // }]
 export default function TravelList() {
     const [list, setList] = useState([{
@@ -27,8 +27,8 @@ export default function TravelList() {
         status: '已通过',
         is_delete: 0,
         rejection_reason: '',
-        pic_urls: ["http://127.0.0.1:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://127.0.0.1:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"],
-        avatar: 'http://127.0.0.1:3007/public/upload/1711703879138-EnLxfaT9WMMl744c2ca944b4001d1a05ba4184354df1.jpeg'
+        pic_urls: ["http://192.168.1.105:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://192.168.1.105:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"],
+        avatar: 'http://192.168.1.105:3007/public/upload/1711703879138-EnLxfaT9WMMl744c2ca944b4001d1a05ba4184354df1.jpeg'
     }])
     const [leftlist, setLeftList] = useState([])
     const [rightlist, setRightList] = useState([])
@@ -38,7 +38,7 @@ export default function TravelList() {
         url: `${baseUrl.baseUrl}my/task/passcates`
     }))
     // const paging = new Paging({
-    //     url: 'http://127.0.0.1:3007/my/task/passcates'
+    //     url: 'http://192.168.1.105:3007/my/task/passcates'
     // })
     const [searchvalue, setSearchValue] = useState('')
     async function fetchData() {
@@ -56,7 +56,7 @@ export default function TravelList() {
             const storedToken = wx.getStorageSync('token');
             // 构建请求的数据对象
             const requestData = {
-                data: JSON.stringify(queryheightlist.map(url => url.replace('http://127.0.0.1:3007/', '')))
+                data: JSON.stringify(queryheightlist.map(url => url.replace('http://192.168.1.105:3007/', '')))
             };
             // console.log(storedToken)
             // console.log(requestData)
@@ -68,7 +68,7 @@ export default function TravelList() {
 
             // 发送POST请求，并等待响应
             const res = await Taro.request({
-                url: 'http://127.0.0.1:3007/my/task/gettaskheight',
+                url: 'http://192.168.1.105:3007/my/task/gettaskheight',
                 method: 'POST',
                 data: requestData,
                 header: header
@@ -109,14 +109,13 @@ export default function TravelList() {
 
         fetchData();
     }, []); // 依赖为空数组表示只在组件加载时执行一次
-
     // onReachBottom: function () {
     //     fetchData();
     // }
     // const fetchData = () => {
     //     const storedToken = wx.getStorageSync('token');
     //     Taro.request({
-    //         url: 'http://127.0.0.1:3007/my/task/passcates', // 替换为你的接口地址
+    //         url: 'http://192.168.1.105:3007/my/task/passcates', // 替换为你的接口地址
     //         method: 'GET',
     //         header: {
     //             'Authorization': storedToken
@@ -136,12 +135,6 @@ export default function TravelList() {
     //         }
     //     })
     // }
-    useReachBottom(() => {
-        // console.log('到达页面底部')
-        if (paging.moreData === true) {
-            fetchData();
-        }
-    })
     const changeSearchValue = (value) => {
         setSearchValue(value)
     }
@@ -162,7 +155,7 @@ export default function TravelList() {
         const storedToken = wx.getStorageSync('token');
         // 构建请求的数据对象
         const requestData = {
-            data: JSON.stringify(queryheightlist.map(url => url.replace('http://127.0.0.1:3007/', '')))
+            data: JSON.stringify(queryheightlist.map(url => url.replace('http://192.168.1.105:3007/', '')))
         };
         // console.log(storedToken)
         // console.log(requestData)
@@ -174,7 +167,7 @@ export default function TravelList() {
 
         // 发送POST请求，并等待响应
         const res = await Taro.request({
-            url: 'http://127.0.0.1:3007/my/task/gettaskheight',
+            url: 'http://192.168.1.105:3007/my/task/gettaskheight',
             method: 'POST',
             data: requestData,
             header: header
@@ -206,26 +199,55 @@ export default function TravelList() {
         // console.log(newlist)
         // setSearchList(newlist)
     }
+    // function scrolltolower() {
+    //     console.log('到达页面底部')
+    //     if (paging.moreData === true) {
+    //         fetchData();
+    //         search();
+    //     }
+    // }
+    // useReachBottom(() => {
+    //     console.log('到达页面底部')
+    //     if (paging.moreData === true) {
+    //         fetchData();
+    //         search();
+    //     }
+    // })
+    function reachBottom() {
+        console.log('到达底部1')
+        if (paging.moreData === true) {
+            fetchData();
+            search();
+        }
+    }
     return (
-        <View className='page' >
-            <AtSearchBar
+        <View>
+            <AtSearchBar className='search'
                 value={searchvalue}
                 onChange={(value) => changeSearchValue(value)}
                 onActionClick={search}
             />
-            <View className='content'>
-                <View className='content-left'>
-                    {leftlist.map((item, index) => {
-                        return <TravelCard key={item.id} {...item} />
-                    })}
+            <ScrollView scrollY style={{ height: 'calc(100vh - 125px)' }} onScrollToLower={reachBottom}   >
+                {/* <ScrollView scrollY style={{ height: 'calc(100vh - 50px)' }} onScrollToLower={reachBottom}> */}
+                <View className='travellist'>
+
+                    <View className='content'>
+                        <View className='content-left'>
+                            {leftlist.map((item, index) => {
+                                return <TravelCard key={item.id} {...item} />
+                            })}
+                        </View>
+                        <View className='content-right'>
+                            {rightlist.map((item, index) => {
+                                return <TravelCard key={item.id} {...item} />
+                            })}
+                        </View>
+                    </View>
+                    {!paging.moreData && <View className='bottom'>~到底啦~</View>}
                 </View>
-                <View className='content-right'>
-                    {rightlist.map((item, index) => {
-                        return <TravelCard key={item.id} {...item} />
-                    })}
-                </View>
-            </View>
-            {!paging.moreData && <View className='bottom'>~到底啦~</View>}
+            </ScrollView>
         </View>
     );
 }
+
+

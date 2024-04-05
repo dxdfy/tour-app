@@ -1,4 +1,4 @@
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, Video } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from '@tarojs/taro';
@@ -10,6 +10,7 @@ export default function Detail() {
     const params = JSON.parse(router.params['params']); // 获取路由参数
     console.log(params);
     useEffect(() => {
+        console.log(params.video_urls[0])
         Taro.showShareMenu({
             withShareTicket: true
         })
@@ -37,6 +38,16 @@ export default function Detail() {
                     })
                 }
             </Swiper>
+
+            {params.video_urls !== null && <Video className='detail-video'
+                src={params.video_urls[0]}
+                controls={true}
+                autoplay={true}
+                initialTime={0}
+                id='video'
+                loop={false}
+                muted={false}
+            />}
             <View className='detail-title'>
                 <Text >{params.title}</Text>
             </View>
