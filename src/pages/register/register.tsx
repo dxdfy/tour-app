@@ -33,7 +33,7 @@ export default function Register() {
 
                 // 上传保存的图片
                 wx.uploadFile({
-                    url: 'http://192.168.1.108:3007/api/register',
+                    url: 'http://192.168.1.105:3007/api/register',
                     filePath: savedFilePath,
                     name: 'file',
                     formData: {
@@ -120,7 +120,7 @@ export default function Register() {
                             const data = {
                                 username: username,
                                 password: password,
-                                // avatar: (avatar !== "" ? avatar : "http://127.0.0.1:3007/public/upload/1711361017494-S5tW9NUlI3bF1a1745f98c2cf7cf09e0b86ce166828e.jpeg")
+                                // avatar: (avatar !== "" ? avatar : "http://192.168.1.105:3007/public/upload/1711361017494-S5tW9NUlI3bF1a1745f98c2cf7cf09e0b86ce166828e.jpeg")
                                 avatar: res.tempFilePath,
                             };
                             console.log(data)
@@ -138,7 +138,7 @@ export default function Register() {
                 const data = {
                     username: username,
                     password: password,
-                    // avatar: (avatar !== "" ? avatar : "http://127.0.0.1:3007/public/upload/1711361017494-S5tW9NUlI3bF1a1745f98c2cf7cf09e0b86ce166828e.jpeg")
+                    // avatar: (avatar !== "" ? avatar : "http://192.168.1.105:3007/public/upload/1711361017494-S5tW9NUlI3bF1a1745f98c2cf7cf09e0b86ce166828e.jpeg")
                     avatar: avatar,
                 };
                 console.log(data)

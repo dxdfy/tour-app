@@ -1,4 +1,4 @@
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, Video, Input } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from '@tarojs/taro';
@@ -10,6 +10,7 @@ export default function Detail() {
     const params = JSON.parse(router.params['params']); // 获取路由参数
     console.log(params);
     useEffect(() => {
+        console.log(params.video_urls[0])
         Taro.showShareMenu({
             withShareTicket: true
         })
@@ -25,7 +26,7 @@ export default function Detail() {
         // } <Image src={avatar} mode='aspectFill' className='content-item-avatar' />
         <View className='detail'>
             <Swiper
-                className='test-h'
+                className='swiper'
                 indicatorColor='#999'
                 indicatorActiveColor='#333'
                 circular
@@ -33,10 +34,20 @@ export default function Detail() {
             >
                 {
                     params.pic_urls.map((item, index) => {
-                        return <SwiperItem key={index}><Image src={item} style={{ width: '100%' }}/></SwiperItem>
+                        return <SwiperItem key={index}><Image className='swiper-img' src={item} /></SwiperItem>
                     })
                 }
             </Swiper>
+
+            {params.video_urls !== null && <Video className='detail-video'
+                src={params.video_urls[0]}
+                controls={true}
+                autoplay={false}
+                initialTime={0}
+                id='video'
+                loop={false}
+                muted={false}
+            />}
             <View className='detail-title'>
                 <Text >{params.title}</Text>
             </View>
@@ -49,6 +60,15 @@ export default function Detail() {
                 <Image src={params.avatar} mode='aspectFill' className='content-item-avatar' />
                 <View>{params.name}</View>
             </View>
+
+            {/* Divider Line */}
+            {/* <View className='divider'></View> */}
+
+            {/* Comment Section */}
+            {/* <View className='comment-section flex-row'>
+                <Image src={params.avatar} mode='aspectFill' className='comment-avatar' />
+                <Input className='comment-input' placeholder='留下一条友善的评论' />
+            </View> */}
         </View>
     )
 }

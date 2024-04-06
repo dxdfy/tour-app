@@ -2,17 +2,16 @@ import My from '@/components/my/my'
 import MyTravel from '@/components/mytravel/mytravel'
 import PublishTravel from '@/components/publishtravel/publishtravel'
 import TravelList from '@/components/travellist/travellist'
-import { View, Text } from '@tarojs/components'
-import { useLoad } from '@tarojs/taro'
+import { View, Text, ScrollView } from '@tarojs/components'
+import { useLoad, useReachBottom } from '@tarojs/taro'
 import React, { useState } from 'react'
 import { AtTabBar } from 'taro-ui'
 import './index.scss'
 
 
-
 export default function Index() {
     const [current, setCurrent] = useState(0); // 使用 useState 定义当前选中的标签页索引
-
+    // const [isreachbottom, setIsReachBottom] = useState(false)
     const handleClick = (index) => {
         setCurrent(index); // 更新当前选中的标签页索引
     };
@@ -22,10 +21,10 @@ export default function Index() {
             content = <TravelList />;
             break;
         case 1:
-            content = <PublishTravel setCurrent={setCurrent}/>;
+            content = <PublishTravel setCurrent={setCurrent} />;
             break;
         case 2:
-            content = <MyTravel setCurrent={setCurrent}/>;
+            content = <MyTravel setCurrent={setCurrent} />;
             break;
         case 3:
             content = <My />;
@@ -36,9 +35,15 @@ export default function Index() {
     useLoad(() => {
         console.log('Page loaded.')
     })
-
+    // function sc() {
+    //     console.log('到达底部1')
+    //     setIsReachBottom(true)
+    // }
+    // useReachBottom(() => {
+    //     console.log('到达底部1')
+    // })
     return (
-        <View className='index'>
+        <View className='page' >
             {content}
             <AtTabBar
                 fixed

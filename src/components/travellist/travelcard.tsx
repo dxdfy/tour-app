@@ -10,7 +10,7 @@ import Taro from '@tarojs/taro';
 //     status: '已通过',
 //     is_delete: 0,
 //     rejection_reason: '',
-//     pic_urls: ["http://127.0.0.1:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://127.0.0.1:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"]
+//     pic_urls: ["http://192.168.1.105:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://192.168.1.105:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"]
 // }
 export default function TravelCard(props) {
     const { pic_urls, title, avatar, name } = props

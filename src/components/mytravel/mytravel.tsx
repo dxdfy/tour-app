@@ -52,7 +52,7 @@ export default function MyTravel({ setCurrent }) {
         setOldFiles(filesData);
         setTitleValue(selectedTravel.title);
         setTextValue(selectedTravel.text);
-        if (selectedTravel.video_urls !== null && selectedTravel.video_urls.length !== 0) {
+        if (selectedTravel.video_urls !== undefined && selectedTravel.video_urls.length !== 0) {
             setVideoFile(selectedTravel.video_urls[0]);
             setOldVideoFile(selectedTravel.video_urls[0]);
         } else {
