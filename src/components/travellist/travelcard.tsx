@@ -17,6 +17,7 @@ export default function TravelCard(props) {
     const handleClick = () => {
         // Taro.navigateTo({ url: '/pages/detail/detail' });
         const queryParams = JSON.stringify(props);
+        console.log(queryParams);
         Taro.navigateTo({ url: `/pages/detail/detail?params=${queryParams}` });
     };
     // const getheight = (e) => {

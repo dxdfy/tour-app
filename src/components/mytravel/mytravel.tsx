@@ -52,7 +52,7 @@ export default function MyTravel({ setCurrent }) {
         setOldFiles(filesData);
         setTitleValue(selectedTravel.title);
         setTextValue(selectedTravel.text);
-        if (selectedTravel.video_urls !== undefined && selectedTravel.video_urls.length !== 0) {
+        if (selectedTravel.video_urls !== undefined && selectedTravel.video_urls !== null &&selectedTravel.video_urls.length !== 0) {
             setVideoFile(selectedTravel.video_urls[0]);
             setOldVideoFile(selectedTravel.video_urls[0]);
         } else {
@@ -356,6 +356,13 @@ export default function MyTravel({ setCurrent }) {
                         title={travel.title}
                         renderIcon={<AtAvatar circle image={travel.pic_urls[0]} size='large'></AtAvatar>}
                         key={index} // 把 key 移到 AtCard 上
+                        onClick={() => {
+                            if (travel.status === '已通过') {
+                                const queryParams = JSON.stringify(travel);
+                                Taro.navigateTo({ url: `/pages/detail/detail?params=${queryParams}` });
+                                console.log(queryParams);
+                            }
+                        }}
                     >
                         <View >
 
@@ -376,8 +383,8 @@ export default function MyTravel({ setCurrent }) {
                                     )}
                                 </View>
                                 <View style={{ display: 'flex' }}>
-                                    <AtButton type='primary' onClick={() => handleEdit(travel.id)}>编辑</AtButton>
-                                    <AtButton type='primary' onClick={() => handleDelete(travel.id)}>删除</AtButton>
+                                    <AtButton type='primary' onClick={(event) => { event.stopPropagation(); handleEdit(travel.id); }}>编辑</AtButton>
+                                    <AtButton type='primary' onClick={(event) => { event.stopPropagation(); handleDelete(travel.id); }}>删除</AtButton>
                                 </View>
                             </View>
                         </View>

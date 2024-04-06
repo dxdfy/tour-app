@@ -44,6 +44,11 @@ export default function PublishTravel({ setCurrent }) {
         return new Promise<void>((resolve, reject) => {
             // 上传文件
             files.forEach((file, index) => {
+                // const isAdd = index === 0; // 设置 is_add，第一张图片为 true，其余为 false
+                // const formDataClone = { ...formData }; // 克隆一个新的 formData 对象
+                // formDataClone.is_add = isAdd.toString(); // 转换为字符串形式
+                // console.log('index',index);
+                // console.log('我的formdata',formDataClone);
                 wx.compressImage({
                     src: file.url,
                     quality: 80,
