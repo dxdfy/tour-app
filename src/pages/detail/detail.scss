@@ -4,7 +4,7 @@
 }
 
 .detail-video {
-    margin: 20px;
+    width: 100%;
 }
 
 .detail-title {
@@ -35,4 +35,12 @@
     height: 40rpx;
     border-radius: 50%;
     margin-right: 15rpx;
+}
+
+.swiper {
+    width: 100vw;
+}
+
+.swiper-img {
+    width: 100%;
 }

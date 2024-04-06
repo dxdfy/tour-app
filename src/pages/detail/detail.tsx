@@ -1,4 +1,4 @@
-import { View, Text, Image, Video } from '@tarojs/components'
+import { View, Text, Image, Video, Input } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from '@tarojs/taro';
@@ -26,7 +26,7 @@ export default function Detail() {
         // } <Image src={avatar} mode='aspectFill' className='content-item-avatar' />
         <View className='detail'>
             <Swiper
-                className='test-h'
+                className='swiper'
                 indicatorColor='#999'
                 indicatorActiveColor='#333'
                 circular
@@ -34,7 +34,7 @@ export default function Detail() {
             >
                 {
                     params.pic_urls.map((item, index) => {
-                        return <SwiperItem key={index}><Image src={item} /></SwiperItem>
+                        return <SwiperItem key={index}><Image className='swiper-img' src={item} /></SwiperItem>
                     })
                 }
             </Swiper>
@@ -42,7 +42,7 @@ export default function Detail() {
             {params.video_urls !== null && <Video className='detail-video'
                 src={params.video_urls[0]}
                 controls={true}
-                autoplay={true}
+                autoplay={false}
                 initialTime={0}
                 id='video'
                 loop={false}
@@ -60,6 +60,7 @@ export default function Detail() {
                 <Image src={params.avatar} mode='aspectFill' className='content-item-avatar' />
                 <View>{params.name}</View>
             </View>
+
         </View>
     )
 }
