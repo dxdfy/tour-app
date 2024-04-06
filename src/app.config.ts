@@ -4,6 +4,7 @@ export default defineAppConfig({
     'pages/register/register',
     'pages/index/index',
     'pages/detail/detail',
+    'pages/comments/comments',
   ],
   window: {
     backgroundTextStyle: 'light',

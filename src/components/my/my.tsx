@@ -78,7 +78,7 @@ export default function My() {
         setConfirmPassword(value);
     }
     const handleMessage = ()=>{
-        console.log('我的评论');
+        Taro.navigateTo({ url: '/pages/comments/comments' });
     }
     const handleAvatar = ()=>{
         setIsOpenAvatarModal(true);
@@ -167,7 +167,7 @@ export default function My() {
                                 size: '20',       
                                 color: '#333'     
                             },     
-                            value: '我的评论'
+                            value: '我的消息'
                         },{
                             iconInfo: {
                                 value: 'image', 

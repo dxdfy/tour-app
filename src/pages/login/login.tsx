@@ -21,7 +21,7 @@ export default function Login() {
         };
         console.log(data)
         wx.request({
-            url: 'http://192.168.1.105:3007/api/login',
+            url: 'http://192.168.1.108:3007/api/login',
             method: 'POST',
             data: data,
             header: {
