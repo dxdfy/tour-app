@@ -62,13 +62,13 @@ export default function Detail() {
             </View>
 
             {/* Divider Line */}
-            <View className='divider'></View>
+            {/* <View className='divider'></View> */}
 
             {/* Comment Section */}
-            <View className='comment-section flex-row'>
+            {/* <View className='comment-section flex-row'>
                 <Image src={params.avatar} mode='aspectFill' className='comment-avatar' />
                 <Input className='comment-input' placeholder='留下一条友善的评论' />
-            </View>
+            </View> */}
         </View>
     )
 }
