@@ -33,7 +33,7 @@ export default function Detail() {
             >
                 {
                     params.pic_urls.map((item, index) => {
-                        return <SwiperItem key={index}><Image src={item} /></SwiperItem>
+                        return <SwiperItem key={index}><Image src={item} style={{ width: '100%' }}/></SwiperItem>
                     })
                 }
             </Swiper>

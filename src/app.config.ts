@@ -3,7 +3,7 @@ export default defineAppConfig({
     'pages/login/login',
     'pages/register/register',
     'pages/index/index',
-    'pages/detail/detail'
+    'pages/detail/detail',
   ],
   window: {
     backgroundTextStyle: 'light',

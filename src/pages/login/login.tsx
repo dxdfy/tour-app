@@ -45,9 +45,9 @@ export default function Login() {
     }
     return (
         <View className='login'>
-            {/* <Form>
+            <Form>
                 <Input title='aaa' type='number' placeholder='原生刺激' />
-            </Form> */}
+            </Form>
 
             <View>
                 {/* <Input type='number' placeholder='原生刺激' /> */}

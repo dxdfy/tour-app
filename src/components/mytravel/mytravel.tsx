@@ -52,10 +52,10 @@ export default function MyTravel({ setCurrent }) {
         setOldFiles(filesData);
         setTitleValue(selectedTravel.title);
         setTextValue(selectedTravel.text);
-        if(selectedTravel.video_urls !== null && selectedTravel.video_urls.length !== 0   ){
+        if (selectedTravel.video_urls !== null && selectedTravel.video_urls.length !== 0) {
             setVideoFile(selectedTravel.video_urls[0]);
             setOldVideoFile(selectedTravel.video_urls[0]);
-        }else{
+        } else {
             setVideoFile('');
             setOldVideoFile('');
         }
@@ -227,7 +227,7 @@ export default function MyTravel({ setCurrent }) {
                         success(res) {
                             if (res.data.message === '删除视频成功') {
                                 console.log('删除视频成功');
-                            }else{
+                            } else {
                                 console.log('删除视频失败');
                             }
                             setVideoFile('');
@@ -241,7 +241,7 @@ export default function MyTravel({ setCurrent }) {
                     });
                 });
                 uploadPromises.push(deleteVideoPromise);
-            }else{
+            } else {
                 const header = {
                     'Authorization': storedToken,
                     'Content-Type': 'multipart/form-data' // 设置请求头的 Content-Type
@@ -294,7 +294,7 @@ export default function MyTravel({ setCurrent }) {
                 // 可以选择适当的方式提示用户上传失败
             });
     };
-    
+
     const handleDelete = (id) => {
         setCurrentId(id);
         setIsOpenDeleteModal(true);
@@ -303,7 +303,7 @@ export default function MyTravel({ setCurrent }) {
         setCurrent(1);
     };
     const handleCancelVideo = () => {
-        setVideoFile(''); 
+        setVideoFile('');
     };
     const handleCancelDelete = () => {
         setCurrentId(0);
@@ -356,6 +356,13 @@ export default function MyTravel({ setCurrent }) {
                         title={travel.title}
                         renderIcon={<AtAvatar circle image={travel.pic_urls[0]} size='large'></AtAvatar>}
                         key={index} // 把 key 移到 AtCard 上
+                        onClick={() => {
+                            if (travel.status === '已通过') {
+                                const queryParams = JSON.stringify(travel);
+                                Taro.navigateTo({ url: `/pages/detail/detail?params=${queryParams}` });
+                                console.log(queryParams);
+                            }
+                        }}
                     >
                         <View >
 
@@ -376,8 +383,8 @@ export default function MyTravel({ setCurrent }) {
                                     )}
                                 </View>
                                 <View style={{ display: 'flex' }}>
-                                    <AtButton type='primary' onClick={() => handleEdit(travel.id)}>编辑</AtButton>
-                                    <AtButton type='primary' onClick={() => handleDelete(travel.id)}>删除</AtButton>
+                                    <AtButton type='primary' onClick={(event) => { event.stopPropagation(); handleEdit(travel.id); }}>编辑</AtButton>
+                                    <AtButton type='primary' onClick={(event) => { event.stopPropagation(); handleDelete(travel.id); }}>删除</AtButton>
                                 </View>
                             </View>
                         </View>
