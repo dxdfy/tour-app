@@ -56,7 +56,11 @@ export default function TravelList() {
             const storedToken = wx.getStorageSync('token');
             // 构建请求的数据对象
             const requestData = {
+<<<<<<< HEAD
                 data: JSON.stringify(queryheightlist.map(url => url.replace('http://192.168.1.105:3007/', '')))
+=======
+                data: JSON.stringify(queryheightlist.map(url => url.replace(/^http:\/\/.*:3007\//, '')))
+>>>>>>> a16bc67612dc1ec08a9410931f30d5257f5b850a
             };
             // console.log(storedToken)
             // console.log(requestData)
@@ -68,7 +72,11 @@ export default function TravelList() {
 
             // 发送POST请求，并等待响应
             const res = await Taro.request({
+<<<<<<< HEAD
                 url: 'http://192.168.1.105:3007/my/task/gettaskheight',
+=======
+                url: `${baseUrl.baseUrl}my/task/gettaskheight`,
+>>>>>>> a16bc67612dc1ec08a9410931f30d5257f5b850a
                 method: 'POST',
                 data: requestData,
                 header: header
@@ -135,6 +143,15 @@ export default function TravelList() {
     //         }
     //     })
     // }
+<<<<<<< HEAD
+=======
+    useReachBottom(() => {
+        console.log('到达页面底部')
+        if (paging.moreData === true) {
+            fetchData();
+        }
+    })
+>>>>>>> a16bc67612dc1ec08a9410931f30d5257f5b850a
     const changeSearchValue = (value) => {
         setSearchValue(value)
     }
@@ -155,7 +172,11 @@ export default function TravelList() {
         const storedToken = wx.getStorageSync('token');
         // 构建请求的数据对象
         const requestData = {
+<<<<<<< HEAD
             data: JSON.stringify(queryheightlist.map(url => url.replace('http://192.168.1.105:3007/', '')))
+=======
+            data: JSON.stringify(queryheightlist.map(url => url.replace(/^http:\/\/.*:3007\//, '')))
+>>>>>>> a16bc67612dc1ec08a9410931f30d5257f5b850a
         };
         // console.log(storedToken)
         // console.log(requestData)
@@ -167,7 +188,11 @@ export default function TravelList() {
 
         // 发送POST请求，并等待响应
         const res = await Taro.request({
+<<<<<<< HEAD
             url: 'http://192.168.1.105:3007/my/task/gettaskheight',
+=======
+            url: `${baseUrl.baseUrl}my/task/gettaskheight`,
+>>>>>>> a16bc67612dc1ec08a9410931f30d5257f5b850a
             method: 'POST',
             data: requestData,
             header: header
