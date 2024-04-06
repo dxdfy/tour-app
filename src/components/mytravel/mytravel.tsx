@@ -294,7 +294,7 @@ export default function MyTravel({ setCurrent }) {
                 // 可以选择适当的方式提示用户上传失败
             });
     };
-    
+
     const handleDelete = (id) => {
         setCurrentId(id);
         setIsOpenDeleteModal(true);
@@ -303,7 +303,7 @@ export default function MyTravel({ setCurrent }) {
         setCurrent(1);
     };
     const handleCancelVideo = () => {
-        setVideoFile(''); 
+        setVideoFile('');
     };
     const handleCancelDelete = () => {
         setCurrentId(0);
@@ -341,15 +341,6 @@ export default function MyTravel({ setCurrent }) {
         setCurrentId(0);
         setIsOpenDeleteModal(false);
     }
-<<<<<<< HEAD
-    const handleTextButtonClick = () => {
-        setCurrent(1);
-    };
-    const handleCancelVideo = () => {
-        setVideoFile('');
-    };
-=======
->>>>>>> a16bc67612dc1ec08a9410931f30d5257f5b850a
     return (
         <ScrollView scrollY style={{ height: 'calc(100vh - 50px)' }}>
             <View>

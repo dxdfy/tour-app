@@ -44,3 +44,13 @@
 .swiper-img {
     width: 100%;
 }
+
+.divider {
+    width: 100%; // 设置分割线的宽度为父元素的宽度
+    height: 1px; // 设置分割线的高度
+    background-color: #ccc; // 设置分割线的颜色
+    margin-top: 10px; // 设置分割线与上方内容的间距
+    margin-bottom: 10px; // 设置分割线与下方内容的间距
+    padding-left: 20px;
+    padding-right: 20px;
+}
