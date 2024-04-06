@@ -32,7 +32,9 @@ export default function Login() {
                 if (res.data.message === '登录成功') {
                     console.log('登录成功', res.data.message);
                     wx.setStorageSync('token', res.data.token);
-                    wx.setStorageSync('username', username);
+                    wx.setStorageSync('username', res.data.username);
+                    wx.setStorageSync('avatar', res.data.avatar);
+
                     wx.redirectTo({
                         url: '/pages/index/index'
                     });
