@@ -10,7 +10,7 @@ export default function Comments() {
             username: wx.getStorageSync('username'),
         };
         wx.request({
-            url: `http://192.168.1.108:3007/my/task/commentsToMe`,
+            url: `http://192.168.1.103:3007/my/task/commentsToMe`,
             method: 'POST',
             data: data,
             header: {
@@ -36,7 +36,7 @@ export default function Comments() {
             username: wx.getStorageSync('username'),
         };
         wx.request({
-            url: `http://192.168.1.108:3007/my/task/myComments`,
+            url: `http://192.168.1.103:3007/my/task/myComments`,
             method: 'POST',
             data: data,
             header: {
@@ -75,7 +75,7 @@ export default function Comments() {
                                         id: comment.id,
                                     };
                                     await wx.request({
-                                        url: `http://192.168.1.108:3007/my/task/passTaskByTaskId`,
+                                        url: `http://192.168.1.103:3007/my/task/passTaskByTaskId`,
                                         method: 'POST',
                                         data: data,
                                         header: {

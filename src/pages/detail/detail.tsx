@@ -34,7 +34,7 @@ export default function Detail() {
 
         // 发送POST请求，并等待响应
         const res = await Taro.request({
-            url: 'http://192.168.1.105:3007/my/task/addComment',
+            url: 'http://172.30.157.157:3007/my/task/addComment',
             method: 'POST',
             data: requestData,
             header: header,
@@ -58,11 +58,11 @@ export default function Detail() {
             }
         });
     }
-    console.log(params);
+    // console.log(params);
     const fetchcomments = () => {
         const storedToken = wx.getStorageSync('token');
         Taro.request({
-            url: `http://192.168.1.105:3007/my/task/getcomments?id=${params.id}`, // 替换为你的接口地址
+            url: `http://172.30.157.157:3007/my/task/getcomments?id=${params.id}`, // 替换为你的接口地址
             method: 'GET',
             header: {
                 'Authorization': storedToken
@@ -148,7 +148,7 @@ export default function Detail() {
             </View>
 
             <View>
-                {comments.map((comment, index) => (
+                {comments !==null &&comments.map((comment, index) => (
                     <View>
                         <View key={index} className="comment-item">
                             <Image src={comment.avatar} className="comment-item-avatar" />
