@@ -1,11 +1,11 @@
 import { View,  Button, Image, Input } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import React, {  useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { AtButton, AtGrid,  AtInput, AtModal, AtModalAction, AtModalContent, AtModalHeader } from 'taro-ui'
 import baseUrl from '../baseUrl'
 import './my.scss'
 export default function My() {
-    const [avatar, setAvatar] = useState('http://192.168.1.108:3007/public/upload/1712319418502-ONiIrNsR3z4V079f166b615b7e3baefe87e494b3fce6.jpeg')
+    const [avatar, setAvatar] = useState(wx.getStorageSync('avatar'));
     const [isOpenChangeModal, setIsOpenChangeModal] = useState(false);
     const [isOpenAvatarModal,setIsOpenAvatarModal] = useState(false);
     const [confirmpassword, setConfirmPassword] = useState('')
@@ -126,6 +126,8 @@ export default function My() {
                         console.log('成功',responseData.message);
                         if (responseData.message === '头像更新成功') {
                             console.log(responseData.message);
+                            const newAvatar = responseData.path;
+                            wx.setStorageSync('avatar', newAvatar);
                             Taro.showToast({
                                 title: '头像更新成功',
                                 icon: 'none',
