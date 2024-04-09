@@ -31,31 +31,31 @@ export default function Comments() {
             }
         });
     }, []);
-    const getMyCommnts = () => {
-        const data = {
-            username: wx.getStorageSync('username'),
-        };
-        wx.request({
-            url: `http://192.168.1.103:3007/my/task/myComments`,
-            method: 'POST',
-            data: data,
-            header: {
-                'Authorization': storedToken,
-                'content-type': 'application/x-www-form-urlencoded'
-            },
-            success: function (res) {
-                console.log(res.data);
-                const allComments = res.data.reduce((acc, curr) => {
-                    return acc.concat(curr.comments);
-                }, []);
-                setComments(allComments);
-                console.log('comments', comments);
-            },
-            fail: function (error) {
-                console.error('failed:', error);
-            }
-        });
-    }
+    // const getMyCommnts = () => {
+    //     const data = {
+    //         username: wx.getStorageSync('username'),
+    //     };
+    //     wx.request({
+    //         url: `http://192.168.1.103:3007/my/task/myComments`,
+    //         method: 'POST',
+    //         data: data,
+    //         header: {
+    //             'Authorization': storedToken,
+    //             'content-type': 'application/x-www-form-urlencoded'
+    //         },
+    //         success: function (res) {
+    //             console.log(res.data);
+    //             const allComments = res.data.reduce((acc, curr) => {
+    //                 return acc.concat(curr.comments);
+    //             }, []);
+    //             setComments(allComments);
+    //             console.log('comments', comments);
+    //         },
+    //         fail: function (error) {
+    //             console.error('failed:', error);
+    //         }
+    //     });
+    // }
     return (
         <ScrollView scrollY style={{ height: 'calc(100vh - 50px)' }}>
             <View>
@@ -85,7 +85,7 @@ export default function Comments() {
                                         success: function (res) {
                                             console.log(res.data.data[0]);
                                             const queryParams = JSON.stringify(res.data.data[0]);
-                                            console.log(queryParams);
+                                            console.log('avatar',comment.avatar);
                                             Taro.navigateTo({ url: `/pages/detail/detail?params=${queryParams}` });
                                         },
                                         fail: function (error) {
