@@ -8,13 +8,35 @@ export default function PublishTravel({ setCurrent }) {
     const [titleValue, setTitleValue] = useState('');
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [videoFile, setVideoFile] = useState('');
-    // const [scrollViewHeight, setScrollViewHeight] = useState(0);
     const [files, setFiles] = useState([
     ]);
-    // useEffect(() => {
-    //     const {  windowHeight } = Taro.getSystemInfoSync();
-    //     setScrollViewHeight( windowHeight);
-    // }, []);
+    const [titles,setTitles] =useState([]);
+    useEffect(() => {
+        const storedToken = wx.getStorageSync('token');
+        const data = {
+            username: wx.getStorageSync('username'),
+        };
+
+        wx.request({
+            url: `${baseUrl.baseUrl}my/task/cates`,
+            method: 'POST',
+            data: data,
+            header: {
+                'Authorization': storedToken,
+                'content-type': 'application/x-www-form-urlencoded'
+            },
+            success: function (res) {
+                if (res.data.message === '获取用户游记成功') {
+                    const titles = res.data.data.map(item => item.title);
+                    console.log(titles);
+                    setTitles(titles);
+                }
+            },
+            fail: function (error) {
+                console.error('failed:', error);
+            }
+        });
+    }, []);
     const handleChange = (event) => {
         setTextValue(event.detail.value);
     };
@@ -43,12 +65,10 @@ export default function PublishTravel({ setCurrent }) {
     const uploadFiles = (files, formData, header) => {
         return new Promise<void>((resolve, reject) => {
             // 上传文件
+            let fileCount = files.length;
+            let uploadedCount = 0;
             files.forEach((file, index) => {
-                // const isAdd = index === 0; // 设置 is_add，第一张图片为 true，其余为 false
-                // const formDataClone = { ...formData }; // 克隆一个新的 formData 对象
-                // formDataClone.is_add = isAdd.toString(); // 转换为字符串形式
-                // console.log('index',index);
-                // console.log('我的formdata',formDataClone);
+
                 wx.compressImage({
                     src: file.url,
                     quality: 80,
@@ -63,8 +83,11 @@ export default function PublishTravel({ setCurrent }) {
                             success(response) {
                                 const responseData = JSON.parse(response.data);
                                 console.log(responseData.message);
-                                if (responseData.message === '新增游记成功') {
-                                    resolve(); // 文件上传成功且消息为 "新增游记成功"，resolve Promise
+                                if (responseData.message === '新增游记成功'||responseData.message === '更新游记成功') {
+                                    uploadedCount++;
+                                    if (uploadedCount === fileCount) {
+                                    resolve(); // 所有文件上传成功，resolve Promise
+                                   }
                                 }
                                 else if (responseData.message === '已有该标题的游记,请前往我的游记进行编辑') {
                                     Taro.showToast({
@@ -76,6 +99,12 @@ export default function PublishTravel({ setCurrent }) {
                                 }
                                 else {
                                     reject(new Error('新增游记失败')); // 消息不是 "新增游记成功"，reject Promise
+                                    Taro.showToast({
+                                        title: '游记重名，请更换标题',
+                                        icon: 'none',
+                                        duration: 1000
+                                    });
+                                    setIsOpenModal(false);
                                 }
                             },
                             fail(error) {
@@ -103,6 +132,14 @@ export default function PublishTravel({ setCurrent }) {
                 duration: 1000 // 可根据需要调整显示时间
             });
             return; // 中止函数执行
+        }
+        if (titles.includes(titleValue)) {
+            Taro.showToast({
+                title: '已有该标题的游记，请前往我的游记进行编辑',
+                icon: 'none',
+                duration: 1000 // 可根据需要调整显示时间
+            });
+            return; 
         }
         const storedToken = wx.getStorageSync('token'); // 使用 wx.getStorageSync 获取本地存储的 token
         // console.log(storedToken);
@@ -144,19 +181,19 @@ export default function PublishTravel({ setCurrent }) {
                     header: header,
                     success(response) {
                         console.log(response.data);
+                        Taro.showToast({
+                            title: '上传成功',
+                            icon: 'success',
+                            duration: 1000
+                        });
+                        setIsOpenModal(false); // 关闭 Modal
+                        setCurrent(2);
                     },
                     fail(error) {
                         console.error('Error:', error);
                     }
                 });
-            }
-            Taro.showToast({
-                title: '上传成功',
-                icon: 'success',
-                duration: 1000
-            });
-            setIsOpenModal(false); // 关闭 Modal
-            setCurrent(2);
+            }           
         } catch (error) {
             console.error('Error:', error);
             // 处理上传失败的情况

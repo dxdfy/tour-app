@@ -33,7 +33,7 @@ export default function Register() {
 
                 // 上传保存的图片
                 wx.uploadFile({
-                    url: 'http://192.168.1.103:3007/api/register',
+                    url: 'http://192.168.1.107:3007/api/register',
                     filePath: savedFilePath,
                     name: 'file',
                     formData: {
@@ -114,7 +114,7 @@ export default function Register() {
             let tmpavatar = "";
             if (avatar === "") {
                 wx.downloadFile({
-                    url: 'http://192.168.1.103:3007/public/upload/1712151146766-w3L2FF4Mtnu3a41f5de0b945ef5fe1cb3c1b72ff383f.jpeg',
+                    url: 'http://192.168.1.107:3007/public/upload/1712151146766-w3L2FF4Mtnu3a41f5de0b945ef5fe1cb3c1b72ff383f.jpeg',
                     success: function (res) {
                         if (res.statusCode === 200) {
                             const data = {

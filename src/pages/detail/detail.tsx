@@ -34,7 +34,7 @@ export default function Detail() {
 
         // 发送POST请求，并等待响应
         const res = await Taro.request({
-            url: 'http://192.168.1.103:3007/my/task/addComment',
+            url: 'http://192.168.1.107:3007/my/task/addComment',
             method: 'POST',
             data: requestData,
             header: header,
@@ -62,7 +62,7 @@ export default function Detail() {
     const fetchcomments = () => {
         const storedToken = wx.getStorageSync('token');
         Taro.request({
-            url: `http://192.168.1.103:3007/my/task/getcomments?id=${params.id}`, // 替换为你的接口地址
+            url: `http://192.168.1.107:3007/my/task/getcomments?id=${params.id}`, // 替换为你的接口地址
             method: 'GET',
             header: {
                 'Authorization': storedToken
@@ -114,7 +114,7 @@ export default function Detail() {
                 }
             </Swiper>
 
-            {params.video_urls !== null && <Video className='detail-video'
+            {params.video_urls !== null && params.video_urls.length !== 0&&<Video className='detail-video'
                 src={params.video_urls[0]}
                 controls={true}
                 autoplay={false}
