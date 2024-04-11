@@ -50,14 +50,6 @@ export default function Register() {
                                 console.log('upload success');
                                 // console.log("成功获取到用户头像存入数据库:", data.path);
                                 console.log("成功获取到用户头像存入数据库:", data.path);
-                                // 更新头像URL
-                                // setAvatar(data.path);
-
-                                // 强制刷新页面
-                                // wx.reLaunch({
-                                //     url: '/pages/register/register' // 替换成你的页面路径
-                                // });
-
                                 wx.showToast({
                                     title: '注册成功',
                                     icon: 'success',
@@ -120,7 +112,6 @@ export default function Register() {
                             const data = {
                                 username: username,
                                 password: password,
-                                // avatar: (avatar !== "" ? avatar : "http://192.168.1.108:3007/public/upload/1711361017494-S5tW9NUlI3bF1a1745f98c2cf7cf09e0b86ce166828e.jpeg")
                                 avatar: res.tempFilePath,
                             };
                             console.log(data)
@@ -138,7 +129,6 @@ export default function Register() {
                 const data = {
                     username: username,
                     password: password,
-                    // avatar: (avatar !== "" ? avatar : "http://192.168.1.108:3007/public/upload/1711361017494-S5tW9NUlI3bF1a1745f98c2cf7cf09e0b86ce166828e.jpeg")
                     avatar: avatar,
                 };
                 console.log(data)

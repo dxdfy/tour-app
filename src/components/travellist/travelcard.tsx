@@ -2,16 +2,7 @@ import { View, Image } from '@tarojs/components'
 import React, { useState } from 'react'
 import './travelcard.scss'
 import Taro from '@tarojs/taro';
-// const data = {
-//     id: 1,
-//     name: 'xianxian',
-//     title: '哪一本书让你至今印象深刻',
-//     text: '想知道你们最喜欢的书籍或者是对自己最有帮助的书籍',
-//     status: '已通过',
-//     is_delete: 0,
-//     rejection_reason: '',
-//     pic_urls: ["http://192.168.1.105:3007/public/upload/1711704209860-Up8PzSz0rkiOc6dcb61719972908f1bc823a27d91304.png", "http://192.168.1.105:3007/public/upload/1711704209871-xF0F8mTIhhQQcad6642e2f7ac44de4290bc13706789b.png"]
-// }
+
 export default function TravelCard(props) {
     const { pic_urls, title, avatar, name } = props
     const handleClick = () => {
@@ -20,11 +11,7 @@ export default function TravelCard(props) {
         console.log(queryParams);
         Taro.navigateTo({ url: `/pages/detail/detail?params=${queryParams}` });
     };
-    // const getheight = (e) => {
-    //     // let image = document.querySelector('.image');
-    //     console.log('width')
-    //     console.log(e.detail.width);
-    // };
+
     return (
         <View className='content-item' onClick={handleClick}>
             <Image src={pic_urls[0]} className='content-item-img' mode='widthFix' />

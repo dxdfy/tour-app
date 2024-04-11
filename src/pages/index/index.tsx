@@ -35,13 +35,7 @@ export default function Index() {
     useLoad(() => {
         console.log('Page loaded.')
     })
-    // function sc() {
-    //     console.log('到达底部1')
-    //     setIsReachBottom(true)
-    // }
-    // useReachBottom(() => {
-    //     console.log('到达底部1')
-    // })
+
     return (
         <View className='page' >
             {content}

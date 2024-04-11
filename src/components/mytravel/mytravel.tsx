@@ -41,7 +41,7 @@ export default function MyTravel({ setCurrent }) {
             }
         });
 
-    }, [query]); // 空数组作为第二个参数，表示只在组件挂载时调用一次
+    }, [query]); 
 
     const handleEdit = (id) => {
         // 根据id找到对应的游记数据
@@ -366,7 +366,7 @@ export default function MyTravel({ setCurrent }) {
                     >
                         <View >
 
-                            {/* <img src={travel.pic_urls[0]} style={{ width: '100%', height: '200px' }} /> */}
+                         
                             <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <View>
                                     {travel.status === '已拒绝' && (

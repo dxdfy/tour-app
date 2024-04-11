@@ -91,14 +91,7 @@ export default function Detail() {
         fetchcomments()
     }, [])
     return (
-        // {
-        //     searchlist.map((item, index) => {
-        //         if (index % 2 === 0) {
-        //             return <TravelCard key={index} {...item} />
-        //         }
-        //         return null
-        //     })
-        // } <Image src={avatar} mode='aspectFill' className='content-item-avatar' />
+  
         <View className='detail'>
             <Swiper
                 className='swiper'
